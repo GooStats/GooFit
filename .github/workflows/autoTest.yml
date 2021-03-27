@@ -50,10 +50,13 @@ jobs:
 
       # build
       - name: Build
-        run: cmake --build build --config Debug
+        run: |
+          source ../root/bin/thisroot.sh
+          cmake --build build --config Debug -- -j
 
       # test
       - name: Test
         run: |
+          source ../root/bin/thisroot.sh
           cd build
           ctest -C Debug --output-on-failure --verbose
