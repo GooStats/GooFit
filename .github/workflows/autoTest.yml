@@ -45,10 +45,10 @@ jobs:
       # configure
       - name: Configure
         run: |
+          env
           echo "<$A>"
           root-config --libs
           root-config --cflags
-          env
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 
       # build
