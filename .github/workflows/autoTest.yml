@@ -40,10 +40,12 @@ jobs:
           wget --no-check-certificate --quiet -O - "${{ matrix.ROOT_URL }}" | tar --strip-components=1 -xz -C root
           source root/bin/thisroot.sh
           popd
+          export A=3
 
       # configure
       - name: Configure
         run: |
+          echo "<$A>"
           root-config --libs
           root-config --cflags
           env
