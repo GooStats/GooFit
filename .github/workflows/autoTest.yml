@@ -38,15 +38,12 @@ jobs:
           pushd ../
           mkdir root
           wget --no-check-certificate --quiet -O - "${{ matrix.ROOT_URL }}" | tar --strip-components=1 -xz -C root
-          source root/bin/thisroot.sh
           popd
-          export A=3
 
       # configure
       - name: Configure
         run: |
-          env
-          echo "<$A>"
+          source ../root/bin/thisroot.sh
           root-config --libs
           root-config --cflags
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
