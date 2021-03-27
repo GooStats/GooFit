@@ -43,7 +43,11 @@ jobs:
 
       # configure
       - name: Configure
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+        run: |
+          root-config --libs
+          root-config --cflags
+          env
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 
       # build
       - name: Build
