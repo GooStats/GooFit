@@ -4,6 +4,8 @@
 #include <thrust/system_error.h>
 #include <thrust/host_vector.h>
 #include <thrust/device_vector.h>
+#include <thrust/iterator/constant_iterator.h>
+#include <thrust/transform_reduce.h>
 
 #include <cmath>
 #include <string>

@@ -146,7 +146,7 @@ __host__ void PdfBase::setData(BinnedDataSet* data) {
   setIndices();
   numEvents = 0;
   numEntries = data->getNumBins();
-  if(!numEntries>0) abortWithCudaPrintFlush(__FILE__, __LINE__, "0 entries. check the numbins of the variable of your data set",this);
+  if(numEntries<=0) abortWithCudaPrintFlush(__FILE__, __LINE__, "0 entries. check the numbins of the variable of your data set",this);
   int dimensions = 2 + observables.size(); // Bin center (x,y, ...), bin value, and bin volume.
   if(!fitControl->binnedFit()) setFitControl(new BinnedNllFit());
 

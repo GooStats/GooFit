@@ -81,14 +81,14 @@ set_property(CACHE GOOFIT_DEVICE PROPERTY STRINGS ${DEVICE_LISTING})
 set_property(CACHE GOOFIT_HOST PROPERTY STRINGS ${HOST_LISTING})
 
 # Thrust
-set(THRUST_REQUIRED_SYSTEMS ${HOST} ${DEVICE})
+set(THRUST_REQUIRED_SYSTEMS ${GOOFIT_HOST} ${GOOFIT_DEVICE})
 FetchContent_Declare(
   thrust
   GIT_REPOSITORY https://github.com/NVIDIA/thrust
   GIT_TAG        1.12.0
   )
 FetchContent_MakeAvailable(thrust)
-thrust_create_target(MyThrust HOST ${HOST} DEVICE ${DEVICE})
+thrust_create_target(MyThrust HOST ${GOOFIT_HOST} DEVICE ${GOOFIT_DEVICE})
 target_compile_features(MyThrust INTERFACE cxx_std_14)
 
 if(NLL_CHECK)

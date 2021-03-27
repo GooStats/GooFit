@@ -8,5 +8,5 @@ add_library(goofit_base
 	Variable.cc
 	)
 
-target_link_libraries(goofit_base PUBLIC ROOT::Core ROOT::Minuit)
+target_link_libraries(goofit_base PUBLIC MyThrust ROOT::Core ROOT::Minuit)
 target_compile_features(goofit_base PUBLIC cxx_std_14)
