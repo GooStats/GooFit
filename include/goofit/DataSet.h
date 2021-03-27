@@ -1,11 +1,11 @@
 #ifndef DATASET_HH
 #define DATASET_HH
 
-#include "goofit/Variable.h"
 #include "goofit/GlobalCudaDefines.h"
 #include <vector> 
 #include <set> 
 #include <string> 
+class Variable;
 
 typedef std::vector<Variable*>::const_iterator varConstIt; 
 typedef std::vector<Variable*>::const_reverse_iterator varConstRIt; 

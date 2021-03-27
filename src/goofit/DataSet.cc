@@ -1,6 +1,5 @@
 #include "goofit/DataSet.h"
-#include <cstdlib> 
-#include <climits> 
+#include "goofit/Variable.h"
 
 DataSet::DataSet (Variable* var, std::string n)  
   : numEventsAdded(0)

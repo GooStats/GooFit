@@ -2,7 +2,6 @@
 #define BINNED_DATASET_HH
 
 #include "goofit/DataSet.h"
-#include <vector>
 #include <map>
 
 class BinnedDataSet : public DataSet {

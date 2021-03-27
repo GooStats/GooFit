@@ -27,5 +27,6 @@ TEST (MyTest, FirstTest) {
 
   std::cout<<lambda->value<<std::endl;
 
-  EXPECT_EQ (145, lambda->value);
+  EXPECT_DOUBLE_EQ(3.7, lambda->value);
+  EXPECT_DOUBLE_EQ(44.490228768272466, Ns.front()->value);
 }

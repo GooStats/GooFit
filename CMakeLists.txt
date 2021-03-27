@@ -137,7 +137,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 add_subdirectory(src)
 
 add_library(goofit_lib INTERFACE)
-target_link_libraries(goofit_lib INTERFACE goofit_base PDFs ROOT::Core)
+target_link_libraries(goofit_lib INTERFACE goofit_base PDFs ROOT::Core ROOT::MathCore)
 
 # test
 include(FetchContent)

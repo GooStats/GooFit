@@ -2,6 +2,7 @@
 #define UNBINNED_DATASET_HH
 
 #include "goofit/DataSet.h"
+#include <map>
 
 class UnbinnedDataSet : public DataSet {
   // Class for unbinned datasets. 
