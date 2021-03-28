@@ -47,6 +47,9 @@ protected:
   static int maskId;
   static std::map<BinnedDataSet*,int> maskmap;
   bool updated() const { return m_updated; }
+#ifdef NLL_CHECK
+  __host__ double sumOfNll (int numVars) const override;
+#endif
   std::vector<unsigned int> pindices;
   fptype* dev_iConsts; 
   int workSpaceIndex;

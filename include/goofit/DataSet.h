@@ -5,7 +5,7 @@
 #include <vector> 
 #include <set> 
 #include <string> 
-class Variable;
+struct Variable;
 
 typedef std::vector<Variable*>::const_iterator varConstIt; 
 typedef std::vector<Variable*>::const_reverse_iterator varConstRIt; 

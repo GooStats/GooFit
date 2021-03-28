@@ -1,0 +1,3 @@
+-Iextern/NVIDIA/thrust
+-Iextern/google/googletest/googletest/include
+-DTHRUST_DEVICE_SYSTEM=THRUST_DEVICE_SYSTEM_CPP

@@ -1,12 +1,19 @@
-file(GLOB_RECURSE test_cases *.cc)
-foreach(case_file ${test_cases})
-get_filename_component( case_name ${case_file} NAME_WE )
-set (case_name test_${case_name})
-add_executable(${case_name} ${case_file})
-  target_link_libraries(${case_name} goofit_lib
-      gtest gtest_main)
-  add_test(NAME ${case_name}
-      COMMAND $<TARGET_FILE:${case_name}>
+add_library(GooFitTestFit fit.cc)
+target_link_libraries(GooFitTestFit PUBLIC goofit_lib)
+add_executable(test_GooFit expFit.cc)
+target_link_libraries(test_GooFit PRIVATE GooFitTestFit gtest_main)
+target_include_directories(test_GooFit PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+add_test(NAME test_GooFit
+  COMMAND $<TARGET_FILE:test_GooFit>
+  WORKING_DIRECTORY
+  ${PROJECT_BINARY_DIR})
+
+add_library(GooFitTestFit_NLL fit.cc)
+target_link_libraries(GooFitTestFit_NLL PUBLIC goofit_lib_NLL)
+add_executable(test_GooFitNLL NLLtest.cc)
+target_link_libraries(test_GooFitNLL PRIVATE GooFitTestFit_NLL gtest_main ROOT::RIO)
+target_include_directories(test_GooFitNLL PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+add_test(NAME test_GooFitNLL
+      COMMAND $<TARGET_FILE:test_GooFitNLL>
       WORKING_DIRECTORY
-      ${PROJECT_BINARY_DIR})
-endforeach()
+      ${CMAKE_CURRENT_SOURCE_DIR})

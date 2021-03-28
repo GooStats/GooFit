@@ -3,7 +3,7 @@
 #include <vector>
 class TMinuit;
 class PdfBase;
-class Variable;
+struct Variable;
 
 void FitFun(int &npar, double *gin, double &fun, double *fp, int iflag); 
 

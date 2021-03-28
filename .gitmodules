@@ -1,0 +1,9 @@
+[submodule "extern/GooStats/cmake-utilities"]
+	path = extern/GooStats/cmake-utilities
+	url = https://github.com/GooStats/cmake-utilities.git
+[submodule "extern/google/googletest"]
+	path = extern/google/googletest
+	url = https://github.com/google/googletest.git
+[submodule "extern/NVIDIA/thrust"]
+	path = extern/NVIDIA/thrust
+	url = https://github.com/NVIDIA/thrust.git

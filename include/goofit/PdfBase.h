@@ -4,7 +4,7 @@
 #include <map>
 #include <vector>
 
-class Variable;
+struct Variable;
 class FitControl;
 class BinnedDataSet;
 class UnbinnedDataSet;
