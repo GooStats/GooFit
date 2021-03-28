@@ -19,8 +19,6 @@ configure_file (
     "${PROJECT_BINARY_DIR}/include/goofit/Version.h"
     )
 
-include_directories("${PROJECT_BINARY_DIR}/include")
-
 include(FetchContent)
 
 ### C++ settings ###
@@ -91,22 +89,6 @@ FetchContent_MakeAvailable(thrust)
 thrust_create_target(MyThrust HOST ${GOOFIT_HOST} DEVICE ${GOOFIT_DEVICE})
 target_compile_features(MyThrust INTERFACE cxx_std_14)
 
-if(NLL_CHECK)
-    add_definitions("-DNLL_CHECK")
-endif()
-if(convolution_CHECK)
-    add_definitions("-Dconvolution_CHECK")
-endif()
-if(RPF_CHECK)
-    add_definitions("-DRPF_CHECK")
-endif()
-if(Quenching_CHECK)
-    add_definitions("-DQuenching_CHECK")
-endif()
-if(Mask_CHECK)
-    add_definitions("-DMask_CHECK")
-endif()
-
 set(GOOFIT_ARCH Auto CACHE STRING "The GPU Archetecture, can be Auto, All, Common, a number, or a name")
 
 if(GOOFIT_DEVICE STREQUAL CUDA)
@@ -133,7 +115,6 @@ function(goofit_add_library GNAME)
     endif()
 endfunction()
 
-include_directories(${PROJECT_SOURCE_DIR}/include)
 add_subdirectory(src)
 
 add_library(goofit_lib INTERFACE)

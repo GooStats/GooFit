@@ -18,18 +18,3 @@ __host__ ExpPdf::ExpPdf (std::string n, Variable* _x, Variable* alpha, Variable*
   GET_FUNCTION_ADDR(ptr_to_Exp);
   initialise(pindices); 
 }
-
-
-__host__ fptype ExpPdf::integrate (fptype lo, fptype hi) const {
-  fptype alpha = host_params[host_indices[parameters + 1]]; 
-
-  if (0 == alpha) {
-    // This gives a constant 1 all across the range
-    return (hi - lo); 
-  }
-
-  fptype ret = EXP(alpha*hi) - EXP(alpha*lo);
-  ret /= alpha; 
-  return ret; 
-}
-

@@ -12,9 +12,6 @@
 
 #include <map>
 #include "DataPdf.h"
-template<class T>
-class DumperPdf;
-class SumLikelihoodPdf;
 class BinnedDataSet;
 #include <memory>
 #define NPDFSIZE_SumPdf 1000
@@ -50,10 +47,6 @@ protected:
   static int maskId;
   static std::map<BinnedDataSet*,int> maskmap;
   bool updated() const { return m_updated; }
-#ifdef NLL_CHECK
-  __host__ double sumOfNll (int numVars) const final;
-  friend class DarkNoiseConvolutionPdf;
-#endif
   std::vector<unsigned int> pindices;
   fptype* dev_iConsts; 
   int workSpaceIndex;
@@ -65,7 +58,6 @@ protected:
   std::vector<Variable*> _weights;
   BinnedDataSet *dataset = nullptr;
   BinnedDataSet *dataset_backup = nullptr;
-  friend class DumperPdf<SumLikelihoodPdf>;
 };
 
 #endif

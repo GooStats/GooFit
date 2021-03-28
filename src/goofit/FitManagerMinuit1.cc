@@ -100,8 +100,5 @@ void FitFun(int & __attribute__((__unused__)) npar, double * __attribute__((__un
   
   pdfPointer->copyParams(pars); 
   fun = pdfPointer->calculateNLL(); 
-#ifdef NLL_CHECK
-  throw -1;
-#endif
 
 }

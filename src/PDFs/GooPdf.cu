@@ -51,6 +51,7 @@ void printMemoryStatus (std::string file, int line) {
 
 #include <execinfo.h>
 void* stackarray[10];
+#include "TSystem.h"
 void abortWithCudaPrintFlush (std::string file, int line, std::string reason, const PdfBase* pdf ) {
 #ifdef CUDAPRINT
   cudaPrintfDisplay(stdout, true);
@@ -74,6 +75,7 @@ void abortWithCudaPrintFlush (std::string file, int line, std::string reason, co
   std::cout << std::endl; 
 
 
+  gSystem->StackTrace();
   // get void* pointers for all entries on the stack
   size_t size = backtrace(stackarray, 10);
   // print out all the frames to stderr
@@ -225,17 +227,6 @@ __host__ void GooPdf::initialise (std::vector<unsigned int> pindices, void* dev_
   functionIdx = findFunctionIdx(dev_functionPtr); 
   setMetrics(); 
 }
-
-__host__ void GooPdf::setDebugMask (int mask, bool setSpecific) const {
-  cpuDebug = mask; 
-#if THRUST_DEVICE_SYSTEM==THRUST_DEVICE_SYSTEM_OMP
-  gpuDebug = cpuDebug;
-  if (setSpecific) debugParamIndex = parameters; 
-#else
-  MEMCPY_TO_SYMBOL(gpuDebug, &cpuDebug, sizeof(int), 0, cudaMemcpyHostToDevice);
-  if (setSpecific) MEMCPY_TO_SYMBOL(debugParamIndex, &parameters, sizeof(unsigned int), 0, cudaMemcpyHostToDevice);
-#endif
-} 
 
 __host__ void GooPdf::setMetrics () {
   delete logger;
@@ -427,6 +418,9 @@ __host__ fptype GooPdf::normalise () const {
   thrust::constant_iterator<fptype*> arrayAddress(normRanges); 
   thrust::constant_iterator<int> eventSize(observables.size());
   thrust::counting_iterator<int> binIndex(0); 
+  if (normRanges == nullptr)
+    abortWithCudaPrintFlush(__FILE__, __LINE__, getName() + " invalid normRanges. forgot to call PdfBase::setData", this);
+
   fptype sum = thrust::transform_reduce(thrust::make_zip_iterator(thrust::make_tuple(binIndex, eventSize, arrayAddress)),
 					thrust::make_zip_iterator(thrust::make_tuple(binIndex + totalBins, eventSize, arrayAddress)),
 					*binnedlogger, dummy, cudaPlus); 
@@ -506,10 +500,12 @@ EXEC_TARGET fptype BinnedMetricTaker::operator () (thrust::tuple<int, int, fptyp
   // collapsing so the grid has one fewer dimension. Rinse and repeat. 
   unsigned int const* const indices = paramIndices + parameters;
   for (int i = 0; i < evtSize; ++i) {
-    const fptype lowerBound = thrust::get<2>(t)[3*i+0];
-    const fptype upperBound = thrust::get<2>(t)[3*i+1];
-    const int numBins    = (int) FLOOR(thrust::get<2>(t)[3*i+2] + 0.5); 
+    const fptype *normRanges = thrust::get<2>(t);
+    const fptype lowerBound = normRanges[3*i+0];
+    const fptype upperBound = normRanges[3*i+1];
+    const int numBins    = (int) FLOOR(normRanges[3*i+2] + 0.5); 
     const int localBin = binNumber % numBins;
+
 
     fptype x = upperBound - lowerBound; 
     x /= numBins;

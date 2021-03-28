@@ -49,7 +49,6 @@ public:
 
   __host__ virtual void transformGrid(fptype* host_output); 
   static __host__ int findFunctionIdx(void* dev_functionPtr); 
-  __host__ void setDebugMask(int mask, bool setSpecific = true) const; 
 
   __host__ void debug() const;
 

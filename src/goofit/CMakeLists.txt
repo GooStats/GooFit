@@ -9,4 +9,7 @@ add_library(goofit_base
 	)
 
 target_link_libraries(goofit_base PUBLIC MyThrust ROOT::Core ROOT::Minuit)
+target_include_directories(goofit_base PUBLIC
+  "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 target_compile_features(goofit_base PUBLIC cxx_std_14)
