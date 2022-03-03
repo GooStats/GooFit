@@ -14,7 +14,7 @@
 MEM_CONSTANT fptype cuda_array[maxParams];        // Holds device-side fit parameters.
 MEM_DEVICE unsigned int paramIndices[maxIndicies];// Holds functor-specific indices into cuda_array. Also overloaded to hold integer constants (ie parameters that cannot vary.)
 MEM_DEVICE fptype functorConstants[maxConsts];    // Holds non-integer constants. Notice that first entry is number of events.
-MEM_CONSTANT fptype normalisationFactors[maxParams];
+//MEM_CONSTANT fptype normalisationFactors[maxParams];
 
 // For debugging
 MEM_CONSTANT int callnumber;
