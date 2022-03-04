@@ -1,2 +1,4 @@
 .*.sw*
 *.root
+cmake-build*
+.idea
