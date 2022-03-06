@@ -1,6 +1,37 @@
 cmake_minimum_required(VERSION 3.15)
 project(GOOFIT CXX)
 
+add_subdirectory(extern/NVIDIA/thrust)
+add_subdirectory(extern/google/googletest/googletest EXCLUDE_FROM_ALL)
+
+# Add clang-tidy if available
+option(CLANG_TIDY "Add clang-tidy")
+option(CLANG_TIDY_FIX "Perform fixes for Clang-Tidy - changes source inplace")
+if (CLANG_TIDY OR CLANG_TIDY_FIX)
+    find_program(
+            CLANG_TIDY_EXE
+            NAMES "clang-tidy"
+            DOC "Path to clang-tidy executable")
+
+    if (CLANG_TIDY_EXE)
+        if (CLANG_TIDY_FIX)
+            set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}" "-fix")
+        else ()
+            set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
+        endif ()
+    endif ()
+endif ()
+
+# Add CCache if available and if supported
+if (NOT CLANG_TIDY_FIX)
+    find_program(CCACHE_PROGRAM ccache)
+    if (CCACHE_PROGRAM)
+        set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
+        set(CMAKE_CUDA_COMPILER_LAUNCHER "${CCACHE_PROGRAM}") # CMake 3.9+
+    endif ()
+endif ()
+
+
 ### Require out-of-source builds (needed to keep old build system) ###
 file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
 message(STATUS ${LOC_PATH})
@@ -19,7 +50,6 @@ configure_file (
     "${PROJECT_BINARY_DIR}/include/goofit/Version.h"
     )
 
-add_subdirectory(extern/NVIDIA/thrust)
 
 include(extern/GooStats/cmake-utilities/INITIALIZE_CUDA.cmake)
 INITIALIZE_CUDA()
@@ -41,6 +71,5 @@ add_library(goofit_lib_NLL INTERFACE)
 target_link_libraries(goofit_lib_NLL INTERFACE goofit_base PDFs_NLL ROOT::Core ROOT::MathCore)
 
 # test
-add_subdirectory(extern/google/googletest/googletest EXCLUDE_FROM_ALL)
 enable_testing()
 add_subdirectory(tests)

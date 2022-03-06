@@ -1,10 +1,10 @@
 #pragma once
 
 #include <thrust/detail/config.h>
-#include <thrust/system_error.h>
-#include <thrust/host_vector.h>
 #include <thrust/device_vector.h>
+#include <thrust/host_vector.h>
 #include <thrust/iterator/constant_iterator.h>
+#include <thrust/system_error.h>
 #include <thrust/transform_reduce.h>
 
 #include <cmath>
@@ -112,13 +112,13 @@ gooError gooFree(void* ptr);
 #define DOUBLES 1
 
 class PdfBase;
-extern void abortWithCudaPrintFlush (std::string file, int line, std::string reason, const PdfBase* pdf = 0) ;
+extern void abortWithCudaPrintFlush (std::string file, int line, std::string reason, const PdfBase* pdf = nullptr) ;
 
 #ifdef DOUBLES
 #define root2 1.4142135623730951
 #define invRootPi 0.5641895835477563
 
-typedef double fptype;
+using fptype = double;
 // Double math functions
 #define ATAN2 atan2
 #define COS cos
@@ -137,7 +137,7 @@ typedef double fptype;
 #ifdef TARGET_SM35
 #define RSQRT rsqrt
 #else
-#define RSQRT 1.0/SQRT
+#define RSQRT (1.0/SQRT)
 #endif
 #define FLOOR floor
 #define POW pow

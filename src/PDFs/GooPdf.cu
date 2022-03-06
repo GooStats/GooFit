@@ -89,8 +89,13 @@ EXEC_TARGET fptype calculateEval(fptype rawPdf, fptype *evtVal, unsigned int par
   return rawPdf;
 }
 
+<<<<<<< HEAD
 EXEC_TARGET fptype calculateNLL(fptype rawPdf, fptype *evtVal, unsigned int par) {
   //  rawPdf *= normalisationFactors[par];
+=======
+EXEC_TARGET fptype calculateNLL (fptype rawPdf, [[maybe_unused]] fptype* evtVal, unsigned int par) {
+//  rawPdf *= normalisationFactors[par];
+>>>>>>> clang-tidy update
   return -EVALLOG(rawPdf);
 }
 
@@ -515,10 +520,17 @@ EXEC_TARGET fptype BinnedMetricTaker::operator()(thrust::tuple<int, int, fptype 
   return callFunction(binCenters + THREADIDX * MAX_NUM_OBSERVABLES, functionIdx, parameters);
 }
 
+<<<<<<< HEAD
 __host__ void GooPdf::getCompProbsAtDataPoints(std::vector<std::vector<fptype>> &values) {
   copyParams();
   double overall = normalise();
   //  MEMCPY_TO_SYMBOL(normalisationFactors, host_normalisation, totalParams*sizeof(fptype), 0, cudaMemcpyHostToDevice);
+=======
+__host__ void GooPdf::getCompProbsAtDataPoints (std::vector<std::vector<fptype> >& values) {
+  copyParams(); 
+  normalise();
+//  MEMCPY_TO_SYMBOL(normalisationFactors, host_normalisation, totalParams*sizeof(fptype), 0, cudaMemcpyHostToDevice); 
+>>>>>>> clang-tidy update
 
   int numVars = observables.size();
   if (fitControl->binnedFit()) {

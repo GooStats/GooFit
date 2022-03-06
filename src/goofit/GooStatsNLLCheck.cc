@@ -1,8 +1,8 @@
 #include "GooStatsNLLCheck.h"
 #include "TFile.h"
-ClassImp(GooStatsNLLCheck)
-GooStatsNLLCheck *GooStatsNLLCheck::me = nullptr;
+ClassImp(GooStatsNLLCheck) // NOLINT
 GooStatsNLLCheck *GooStatsNLLCheck::get() {
+  static GooStatsNLLCheck *me = nullptr;
   if(!me) me = new GooStatsNLLCheck();
   return me;
 }
@@ -39,37 +39,28 @@ void GooStatsNLLCheck::save() {
   delete file;
   file = nullptr;
 }
+#include <iostream>
+template<typename... Args>
+std::string string_format(const std::string &format, Args... args) {
+  int size_s = std::snprintf(nullptr, 0, format.c_str(), args...) + 1;// Extra space for '\0'
+  if (size_s <= 0) { throw std::runtime_error("Error during formatting."); }
+  auto size = static_cast<size_t>(size_s);
+  auto buf = std::unique_ptr<char[]>(new char[size]);
+  std::snprintf(buf.get(), size, format.c_str(), args...);
+  return {buf.get(), buf.get() + size - 1};// We don't want the '\0' inside
+}
 void GooStatsNLLCheck::print() const {
-#if __cplusplus <= 199711L
-  for(size_t i = 0;i<results.size();++i) {
-    const std::map<int,Info> &result = results.at(i);
-    std::map<int,Info>::const_iterator binIt = result.begin();
-    for(;binIt != result.end(); ++binIt) {
-      printf("log(L) %.12le b %lf M %lf tot %.12le\n",binIt->second.LL,binIt->second.E,binIt->second.M,binIt->second.T);
-      std::map<std::string,double>::const_iterator spcIt = binIt->second.compositions.begin();
-      for(;spcIt != binIt->second.compositions.end(); ++spcIt) {
-        printf(" %s %.12le",spcIt->first.c_str(),spcIt->second);
-      }
-      printf("\n");
-    }
-  }
-  for(size_t i = 0;i<totLL.size();++i) {
-    printf("log(L) %.12le\n",totLL.at(i));
-  }
-  printf("final log(L) %.12le\n",finalLL);
-#else
   for(auto ele : get_results()) {
     for(auto bin : ele) {
-      printf("log(L) %.12le b %lf M %lf tot %.12le\n",bin.second.LL,bin.second.E,bin.second.M,bin.second.T);
+      std::cout<<string_format("log(L) %.12le b %lf M %lf tot %.12le",bin.second.LL,bin.second.E,bin.second.M,bin.second.T)<<std::endl;
       for(auto spc : bin.second.compositions) {
-        printf(" %s %.12le",spc.first.c_str(),spc.second);
+        std::cout<<string_format(" %s %.12le",spc.first.c_str(),spc.second);
       }
-      printf("\n");
+      std::cout<<std::endl;
     }
   }
   for(auto LL: get_totLL()) {
-    printf("log(L) %.12le\n",LL);
+    std::cout<<string_format("log(L) %.12le",LL)<<std::endl;
   }
-  printf("final log(L) %.12le\n",finalLL);
-#endif
+  std::cout<<string_format("final log(L) %.12le",finalLL)<<std::endl;
 }

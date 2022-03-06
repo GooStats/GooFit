@@ -1,11 +1,12 @@
 #ifndef VARIABLE_HH
 #define VARIABLE_HH
 
-#include <string>
 #include "goofit/GlobalCudaDefines.h"
+#include <string>
+#include <utility>
 
 struct Indexable {
-  Indexable(std::string n, fptype val = 0) : name(n), value(val), index(-1) {}
+  explicit Indexable(std::string n, fptype val = 0) : name(std::move(n)), value(val), index(-1) {}
 
   int getIndex() const {return index;}
   std::string name; 
@@ -19,7 +20,7 @@ struct Variable : Indexable {
   // data set. The index can refer either to cuda_array
   // or to an event.
 
-  Variable(std::string n);
+  explicit Variable(std::string n);
   Variable(std::string n, fptype val);
   Variable(std::string n, fptype dn, fptype up);
   Variable(std::string n, fptype v, fptype dn, fptype up);
@@ -42,7 +43,7 @@ struct Constant : Indexable {
   // to functorConstants instead of cuda_array.
 
   Constant(std::string n, fptype val) : Indexable(n, val) {}
-  ~Constant() {}
+  ~Constant() = default;
 };
 
 #endif

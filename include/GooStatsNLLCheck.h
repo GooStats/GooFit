@@ -1,6 +1,6 @@
 /*****************************************************************************/
 // Author: Xuefeng Ding <xuefeng.ding.physics@gmail.com>
-// Insitute: Gran Sasso Science Institute, L'Aquila, 67100, Italy
+// Institute: Gran Sasso Science Institute, L'Aquila, 67100, Italy
 // Date: 2018 April 7th
 // Version: v1.0
 // Description: GooStats, a statistical analysis toolkit that runs on GPU.
@@ -27,17 +27,10 @@ class GooStatsNLLCheck : public TNamed {
     void save();
     void print() const;
     struct Info {
-#if __cplusplus <= 199711L
-      double E;
-      double M;
-      double T;
-      double LL;
-#else
       double E = 0;
       double M = 0;
       double T = 0;
       double LL = 0;
-#endif
       std::map<std::string,double> compositions;
     };
     const std::vector<std::map<int,GooStatsNLLCheck::Info>> &get_results() const { return results; }
@@ -51,7 +44,6 @@ class GooStatsNLLCheck : public TNamed {
     TFile *file; //! do not save it
     std::map<int,GooStatsNLLCheck::Info> result; //! temporary
     double _s_totLL; //! temporal
-    static GooStatsNLLCheck *me; //! global var
     ClassDef(GooStatsNLLCheck,1)
 };
 #endif
