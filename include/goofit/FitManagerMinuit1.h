@@ -5,24 +5,25 @@ class TMinuit;
 class PdfBase;
 struct Variable;
 
-void FitFun(int &npar, double *gin, double &fun, double *fp, int iflag); 
+void FitFun(int &npar, double *gin, double &fun, double *fp, int iflag);
 
-class FitManager { 
+class FitManager {
 public:
-  FitManager (PdfBase* dat);
-  ~FitManager ();
-  void setMaxCalls (double mxc) {overrideCallLimit = mxc;}
-  void setupMinuit ();
-  void runMigrad (); 
-  void fit (); 
-  TMinuit* getMinuitObject () {return minuit;} 
-  void getMinuitValues () const;
-  TMinuit* minuit; 
-  static std::vector<Variable*> vars; 
+  FitManager(PdfBase *dat);
+  ~FitManager();
+  void setMaxCalls(double mxc) { overrideCallLimit = mxc; }
+  void setupMinuit();
+  void runMigrad();
+  void fit();
+  TMinuit *getMinuitObject() { return minuit; }
+  void getMinuitValues() const;
+  TMinuit *minuit;
+  static std::vector<Variable *> vars;
   static bool minim_conv;
   static bool hesse_conv;
+
 private:
-  double overrideCallLimit; 
+  double overrideCallLimit;
 };
 
-#endif 
+#endif

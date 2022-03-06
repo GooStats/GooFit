@@ -7,7 +7,7 @@
 class BinnedDataSet : public DataSet {
   // Class for rectangularly binned datasets - every bin the same size.
 
-  public:
+public:
   BinnedDataSet(Variable *var, std::string n = "");
   BinnedDataSet(std::vector<Variable *> &vars, std::string n = "");
   BinnedDataSet(std::set<Variable *> &vars, std::string n = "");
@@ -26,7 +26,7 @@ class BinnedDataSet : public DataSet {
   void setBinContent(unsigned int bin, fptype value) { binvalues[bin] = value; }
   void setBinError(unsigned int bin, fptype error);
 
-  private:
+private:
   void cacheNumBins();
   std::vector<unsigned int> convertValuesToBins(const std::vector<fptype> &vals) const;
   unsigned int localToGlobal(std::vector<unsigned int> &locals) const;
@@ -34,8 +34,8 @@ class BinnedDataSet : public DataSet {
 
   std::vector<fptype> binvalues;
   std::vector<fptype> binerrors;
-  std::map<Variable *, int> cachedNumBins;// Store these numbers in case they change on the user end - vast confusion possible.
+  std::map<Variable *, int>
+      cachedNumBins;  // Store these numbers in case they change on the user end - vast confusion possible.
 };
-
 
 #endif

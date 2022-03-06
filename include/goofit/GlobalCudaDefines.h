@@ -10,23 +10,24 @@
 #include <cmath>
 #include <string>
 
-#if THRUST_DEVICE_SYSTEM!=THRUST_DEVICE_SYSTEM_CUDA
-#include <cstring> // for std::memcpy
+#if THRUST_DEVICE_SYSTEM != THRUST_DEVICE_SYSTEM_CUDA
+#include <cstring>  // for std::memcpy
 // OMP target - all 'device' memory is actually on host.
 #define ALIGN(n)
 #define MEM_DEVICE
 #define MEM_SHARED
 #define MEM_CONSTANT
 #define EXEC_TARGET __host__
-#define THREAD_SYNCH _Pragma("omp barrier") // valid in C99 and C++11, but probably not C++93
+#define THREAD_SYNCH _Pragma("omp barrier")  // valid in C99 and C++11, but probably not C++93
 #define DEVICE_VECTOR thrust::host_vector
 // Use char* here because I need +1 to mean "offset by one byte", not "by one sizeof(whatever)".
 // Can't use void* because then the compiler doesn't know how to do pointer arithmetic.
 // This will fail if sizeof(char) is more than 1. But that should never happen, right?
-#define MEMCPY(target, source, count, direction) std::memcpy((char*) target, source, count)
-#define MEMCPY_TO_SYMBOL(target, source, count, offset, direction) std::memcpy(((char*) target)+offset, source, count)
-#define MEMCPY_FROM_SYMBOL(target, source, count, offset, direction) std::memcpy((char*) target, ((char*) source)+offset, count)
-#define GET_FUNCTION_ADDR(fname) host_fcn_ptr = (void*) fname
+#define MEMCPY(target, source, count, direction) std::memcpy((char *)target, source, count)
+#define MEMCPY_TO_SYMBOL(target, source, count, offset, direction) std::memcpy(((char *)target) + offset, source, count)
+#define MEMCPY_FROM_SYMBOL(target, source, count, offset, direction) \
+  std::memcpy((char *)target, ((char *)source) + offset, count)
+#define GET_FUNCTION_ADDR(fname) host_fcn_ptr = (void *)fname
 #define SYNCH dummySynch
 #define BLOCKIDX (1)
 #define GRIDDIM (1)
@@ -34,21 +35,21 @@ void dummySynch();
 #define CONST_PI M_PI
 // Create my own error type to avoid __host__ redefinition
 // conflict in Thrust from including driver_types.h
-enum gooError {gooSuccess = 0, gooErrorMemoryAllocation};
+enum gooError { gooSuccess = 0, gooErrorMemoryAllocation };
 #define RO_CACHE(x) (x)
 #endif
 
-#if THRUST_DEVICE_SYSTEM==THRUST_DEVICE_SYSTEM_OMP
+#if THRUST_DEVICE_SYSTEM == THRUST_DEVICE_SYSTEM_OMP
 
 #define THREADIDX (omp_get_thread_num())
 #define BLOCKDIM (omp_get_num_threads())
 
-#elif THRUST_DEVICE_SYSTEM==THRUST_DEVICE_SYSTEM_TBB
+#elif THRUST_DEVICE_SYSTEM == THRUST_DEVICE_SYSTEM_TBB
 
 #define THREADIDX (1)
 #define BLOCKDIM (1)
 
-#elif THRUST_DEVICE_SYSTEM==THRUST_DEVICE_SYSTEM_CUDA
+#elif THRUST_DEVICE_SYSTEM == THRUST_DEVICE_SYSTEM_CUDA
 
 // CUDA target - defaults
 #define ALIGN(n) __align__(n)
@@ -66,33 +67,31 @@ enum gooError {gooSuccess = 0, gooErrorMemoryAllocation};
 #endif
 
 #include <stdexcept>
-#define GOOFIT_CUDA_CHECK(function)                                                                                    \
-    {                                                                                                                  \
-        cudaError err = function;                                                                                      \
-        if(err != cudaSuccess) {                                                                                       \
-	    throw std::runtime_error(std::string(cudaGetErrorString(err)));						       \
-        }                                                                                                              \
-    }
+#define GOOFIT_CUDA_CHECK(function)                                   \
+  {                                                                   \
+    cudaError err = function;                                         \
+    if (err != cudaSuccess) {                                         \
+      throw std::runtime_error(std::string(cudaGetErrorString(err))); \
+    }                                                                 \
+  }
 
 template <typename T>
 void *get_device_symbol_address(const T &symbol) {
-    void *result;
-    return result;
+  void *result;
+  return result;
 }
-#define GET_FUNCTION_ADDR(fname) GOOFIT_CUDA_CHECK(cudaMemcpyFromSymbol((void**)&host_fcn_ptr, fname, sizeof(void *)));
+#define GET_FUNCTION_ADDR(fname) GOOFIT_CUDA_CHECK(cudaMemcpyFromSymbol((void **)&host_fcn_ptr, fname, sizeof(void *)));
 
 #define MEMCPY(target, source, count, direction) GOOFIT_CUDA_CHECK(cudaMemcpy(target, source, count, direction));
 
 #define MEMCPY_TO_SYMBOL(target, source, count, offset, direction) \
-    GOOFIT_CUDA_CHECK(cudaMemcpyToSymbol(target, source, count, offset, direction));
+  GOOFIT_CUDA_CHECK(cudaMemcpyToSymbol(target, source, count, offset, direction));
 
 #define MEMCPY_FROM_SYMBOL(target, source, count, offset, direction) \
-    GOOFIT_CUDA_CHECK(cudaMemcpyFromSymbol(target, source, count, offset, direction));
+  GOOFIT_CUDA_CHECK(cudaMemcpyFromSymbol(target, source, count, offset, direction));
 
 // For CUDA case, just use existing errors, renamed
-enum gooError {gooSuccess = cudaSuccess,
-               gooErrorMemoryAllocation = cudaErrorMemoryAllocation
-              };
+enum gooError { gooSuccess = cudaSuccess, gooErrorMemoryAllocation = cudaErrorMemoryAllocation };
 #define THREADIDX (threadIdx.x)
 #define BLOCKDIM (blockDim.x)
 #define BLOCKIDX (blockIdx.x)
@@ -106,13 +105,13 @@ enum gooError {gooSuccess = cudaSuccess,
 
 #endif
 
-gooError gooMalloc(void** target, size_t bytes);
-gooError gooFree(void* ptr);
+gooError gooMalloc(void **target, size_t bytes);
+gooError gooFree(void *ptr);
 
 #define DOUBLES 1
 
 class PdfBase;
-extern void abortWithCudaPrintFlush (std::string file, int line, std::string reason, const PdfBase* pdf = nullptr) ;
+extern void abortWithCudaPrintFlush(std::string file, int line, std::string reason, const PdfBase *pdf = nullptr);
 
 #ifdef DOUBLES
 #define root2 1.4142135623730951
@@ -130,14 +129,16 @@ using fptype = double;
 #define FABS fabs
 #define FMOD fmod
 #define LOG log
-#define EVALLOG(x) ((x)<= 2.*2.2250738585072014e-308 ? (x)/2.*2.2250738585072014e-308+LOG(2.*2.2250738585072014e-308)-1: LOG(x))
+#define EVALLOG(x)                                                                                                  \
+  ((x) <= 2. * 2.2250738585072014e-308 ? (x) / 2. * 2.2250738585072014e-308 + LOG(2. * 2.2250738585072014e-308) - 1 \
+                                       : LOG(x))
 #define MODF modf
 #define SIN sin
 #define SQRT sqrt
 #ifdef TARGET_SM35
 #define RSQRT rsqrt
 #else
-#define RSQRT (1.0/SQRT)
+#define RSQRT (1.0 / SQRT)
 #endif
 #define FLOOR floor
 #define POW pow

@@ -27,13 +27,13 @@ spoiled.
 15) bug fix: the exposure are saved now.
 
 2017.03.07 Xuefeng Ding <xuefeng.ding.physics@gmail.com>
-Tag: 20170304_cvs_commit  9280e93fe53146d27b8dbfaebf8968507fa57e82 
+Tag: 20170304_cvs_commit  9280e93fe53146d27b8dbfaebf8968507fa57e82
 1) Major upgrade of the GooFitter. Now it supports simutaneous fitting of several
 periods, as well as North/South sphere. Also it's easy to specify with
 quantify should be the same globally or same in N/S sphere or just between
-Major/TFCtagged. 
+Major/TFCtagged.
 2) The git history is imported to the CVS repository, in this way we can keep
-the CVS version new in an easy way. 
+the CVS version new in an easy way.
 3) The large un-used files from other examples are removed. This could cause
 troubles when you do cvs update. If so, delete offline/GooFit folder and do
 <cvs update>.
@@ -55,7 +55,7 @@ the calculation power of your GPU on
 https://en.wikipedia.org/wiki/List_of_Nvidia_graphics_processing_units
 
 Usually if you use a laptop, the double precision power is negligible. You
-need to comment out the line 78 of GlobalCudaDefines.hh 
+need to comment out the line 78 of GlobalCudaDefines.hh
 line 76 ->>	//#define DOUBLES 1
 We don't know whether or not the result got from the single precision is
 biased or not. Yet for code developing it's good enough.
@@ -67,7 +67,7 @@ If you find any bugs please feel free to write to me.
 2017.03.05 Xuefeng Ding <xuefeng.ding.physics@gmail.com>
 Tag: 20170305_cvs_commit 978f826b0e904c9583ee8c056ae29ee800bb5325
 The date in the previous ChangeLog is mysterously wrong.. sorry.
-1) Implement the MC fitting. The logic controling the type of the spectrum is
+1) Implement the MC fitting. The logic controlling the type of the spectrum is
 in examples/spectralfit/src/species.cc. Currently the logic concerning control
 of using MC spectrum is creepy. The synthpup will be forced to use external
 histogram as if using MC fitting.
@@ -85,7 +85,7 @@ Such features is implemented by the official GooFit team and I just update our
 package. Credits is devoted to them.
 2) Npmt fitting (without darknoise) is validated by the bit-wise comparison
 method, i.e. the likelihood and the expected number of events in each bin are
-the same. 
+the same.
 3) Two scripts are prepared for fast validation: NLLcheck.sh and Fitcheck.sh
 just type ./NLLcheck.sh and ./Fitcheck.sh in examples/spectralfit you can
 compare the result of the GooFitter and that from the official fitter.
@@ -94,14 +94,14 @@ GooFit in the cvs.
 
 2017.03.17 Xuefeng Ding <xuefeng.ding.physics@gmail.com>
 Tag: 20170317_cvs_commit 73c1adee0c3ce4367e8ab8b089c80ac532aa66b4
-1) dark noise convolution implemented and validted. 
+1) dark noise convolution implemented and validted.
 2) NLLcheck.sh and Fitcheck.sh provided for unit test
 next step would be implementing the mask and the multivariate fit.
 
 2017.03.18 Xuefeng Ding <xuefeng.ding.physics@gmail.com>
 Tag: 20170318_cvs_commit 0475b6e74c619d5944ad103701e1facb177e80e9
 1) The difference on the log(L) between the official fitter and the GPU-fitter
-is reduced from 0.0003% to 1e-15. The difference originaly comes from the
+is reduced from 0.0003% to 1e-15. The difference originally comes from the
 different way of skipping ultra-low energy events (<0.5 npmt_norm). This is
 documented in the GPU report. The contribution of such points is below the
 double precision. Now because of the dark noise convolution we need the
@@ -125,7 +125,7 @@ strong, because the dark noise on the first bin is as large as 98%.
 3) The implementation of the darknoise convolution and the mask in 3 days
 proves that the GPU-fitter is well organized and easy to extend.
 
-2017.03.25 Xuefeng Ding <xuefeng.ding.physics@gmail.com> \"Omer Penek <orpenek@gmail.com> Alina Vishneva <the2cherry2orchard@gmail.com> 
+2017.03.25 Xuefeng Ding <xuefeng.ding.physics@gmail.com> \"Omer Penek <orpenek@gmail.com> Alina Vishneva <the2cherry2orchard@gmail.com>
 Tag: 20170325_cvs_commit d95969a31821cc8965489859cc2519d2c56bbe6d
 1) The penalty term added (\"Omer)
 2) The new scaled poisson discussed in the analytical meeting in Milano added

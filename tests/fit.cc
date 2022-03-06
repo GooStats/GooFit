@@ -7,7 +7,7 @@
 #include "goofit/Variable.h"
 namespace GooFit {
   void fit(double &a, double &b) {
-    auto *energy = new Variable("energy", 1, 100);// nbins = 100
+    auto *energy = new Variable("energy", 1, 100);  // nbins = 100
     auto *data = new BinnedDataSet(energy);
     gRandom->SetSeed(1);
     for (int i = 0; i < 100; ++i) {
@@ -29,4 +29,4 @@ namespace GooFit {
     a = lambda->value;
     b = Ns.front()->value;
   }
-}// namespace GooFit
+}  // namespace GooFit

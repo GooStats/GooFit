@@ -4,6 +4,6 @@
 #include "FitManagerMinuit1.cc"
 #elif MINUIT_VERSION == 2
 #include "FitManagerMinuit2.cc"
-#else 
+#else
 #include "FitManagerMinuit3.cc"
-#endif 
+#endif

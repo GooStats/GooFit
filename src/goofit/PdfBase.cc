@@ -11,13 +11,21 @@ fptype host_normalisation[maxIndicies];
 fptype host_params[maxParams];
 unsigned int host_indices[maxIndicies];
 unsigned int totalParams = 0;
-unsigned int totalConstants = 1;// First constant is reserved for number of events.
+unsigned int totalConstants = 1;  // First constant is reserved for number of events.
 std::map<Variable *, std::set<PdfBase *>> variableRegistry;
 std::map<PdfBase *, int> pdfIdMap;
 std::string pdfName[maxIndicies];
 
 PdfBase::PdfBase(Variable *x, std::string n)
-    : name(std::move(n)), numEvents(0), numEntries(0), normRanges(nullptr), fitControl(nullptr), integrationBins(-1), specialMask(0), cachedParams(nullptr), properlyInitialised(true)// Special-case PDFs should set to false.
+    : name(std::move(n)),
+      numEvents(0),
+      numEntries(0),
+      normRanges(nullptr),
+      fitControl(nullptr),
+      integrationBins(-1),
+      specialMask(0),
+      cachedParams(nullptr),
+      properlyInitialised(true)  // Special-case PDFs should set to false.
       ,
       pdfId(-1) {
   if (x != nullptr) {
@@ -29,14 +37,14 @@ __host__ void PdfBase::checkInitStatus(std::vector<std::string> &unInited) const
   if (!properlyInitialised) {
     unInited.push_back(getName());
   }
-  for (auto *component: components) {
+  for (auto *component : components) {
     component->checkInitStatus(unInited);
   }
 }
 
 __host__ void PdfBase::recursiveSetNormalisation(fptype norm) const {
   host_normalisation[parameters] = norm;
-  for (auto *component: components) {
+  for (auto *component : components) {
     component->recursiveSetNormalisation(norm);
   }
 }
@@ -51,9 +59,7 @@ __host__ int PdfBase::registerPdf() {
 }
 __host__ unsigned int PdfBase::registerParameter(Variable *var) {
   if (var == nullptr) {
-    std::cout << "Error: Attempt to register null Variable with "
-              << getName()
-              << ", aborting.\n";
+    std::cout << "Error: Attempt to register null Variable with " << getName() << ", aborting.\n";
     assert(var);
     exit(1);
   }
@@ -68,7 +74,7 @@ __host__ unsigned int PdfBase::registerParameter(Variable *var) {
     unsigned int unusedIndex = 0;
     while (true) {
       bool canUse = true;
-      for (auto &p: variableRegistry) {
+      for (auto &p : variableRegistry) {
         if (static_cast<int>(unusedIndex) != p.first->index) {
           continue;
         }
@@ -98,30 +104,30 @@ __host__ void PdfBase::unregisterParameter(Variable *var) {
   if (variableRegistry[var].empty()) {
     var->index = -1;
   }
-  for (auto &component: components) {
+  for (auto &component : components) {
     component->unregisterParameter(var);
   }
 }
 
 __host__ void PdfBase::getParameters(parCont &ret) const {
-  for (auto *p: parameterList) {
+  for (auto *p : parameterList) {
     if (std::find(ret.begin(), ret.end(), p) != ret.end()) {
       continue;
     }
     ret.push_back(p);
   }
-  for (auto *component: components) {
+  for (auto *component : components) {
     component->getParameters(ret);
   }
 }
 
 __host__ Variable *PdfBase::getParameterByName(std::string n) const {
-  for (auto *p: parameterList) {
+  for (auto *p : parameterList) {
     if (p->name == n) {
       return p;
     }
   }
-  for (auto *component: components) {
+  for (auto *component : components) {
     Variable *cand = component->getParameterByName(n);
     if (cand != nullptr) {
       return cand;
@@ -137,7 +143,7 @@ __host__ void PdfBase::getObservables(std::vector<Variable *> &ret) const {
     }
     ret.push_back(*p);
   }
-  for (auto *component: components) {
+  for (auto *component : components) {
     component->getObservables(ret);
   }
 }
@@ -175,7 +181,7 @@ __host__ bool PdfBase::parametersChanged() const {
   parCont params;
   getParameters(params);
   int counter = 0;
-  for (auto &param: params) {
+  for (auto &param : params) {
     if (cachedParams[counter++] != host_params[param->index]) {
       return true;
     }
@@ -192,7 +198,7 @@ __host__ void PdfBase::storeParameters() const {
   }
 
   int counter = 0;
-  for (auto &param: params) {
+  for (auto &param : params) {
     cachedParams[counter++] = host_params[param->index];
   }
 }

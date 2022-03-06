@@ -20,13 +20,15 @@ extern unsigned int host_indices[maxIndicies];
 extern unsigned int totalParams;
 extern unsigned int totalConstants;
 extern std::string pdfName[maxIndicies];
-template<class T>
+template <class T>
 class DumperPdf;
 class SumPdf;
 class SumLikelihoodPdf;
-extern MEM_CONSTANT fptype cuda_array[maxParams];        // Holds device-side fit parameters.
-extern MEM_DEVICE unsigned int paramIndices[maxIndicies];// Holds functor-specific indices into cuda_array. Also overloaded to hold integer constants (ie parameters that cannot vary.)
-extern MEM_DEVICE fptype functorConstants[maxConsts];    // Holds non-integer constants. Notice that first entry is number of events.
+extern MEM_CONSTANT fptype cuda_array[maxParams];  // Holds device-side fit parameters.
+extern MEM_DEVICE unsigned int paramIndices
+    [maxIndicies];  // Holds functor-specific indices into cuda_array. Also overloaded to hold integer constants (ie parameters that cannot vary.)
+extern MEM_DEVICE fptype
+    functorConstants[maxConsts];  // Holds non-integer constants. Notice that first entry is number of events.
 extern MEM_CONSTANT fptype normalisationFactors[maxParams];
 
 extern MEM_DEVICE void *device_function_table[200];
@@ -34,13 +36,11 @@ extern void *host_function_table[200];
 extern unsigned int num_device_functions;
 
 class PdfBase {
-
-  public:
+public:
   PdfBase(Variable *x, std::string n);
   virtual ~PdfBase() {}
 
-  enum Specials { ForceSeparateNorm = 1,
-                  ForceCommonNorm = 2 };
+  enum Specials { ForceSeparateNorm = 1, ForceCommonNorm = 2 };
 
   __host__ virtual double calculateNLL() const = 0;
   __host__ virtual fptype normalise() const = 0;
@@ -90,28 +90,29 @@ class PdfBase {
   __host__ void checkInitStatus(std::vector<std::string> &unInited) const;
   void clearCurrentFit() const;
 
-  protected:
-  std::string reflex_name_;//< This is the name of the type of the PDF, for reflexion purposes. Must be set or
-                           // RecursiveSetIndicies must be overloaded.
+protected:
+  std::string reflex_name_;  //< This is the name of the type of the PDF, for reflexion purposes. Must be set or
+                             // RecursiveSetIndicies must be overloaded.
 
   fptype numEvents;         // Non-integer to allow weighted events
   unsigned int numEntries;  // Eg number of bins - not always the same as number of events, although it can be.
-  fptype *normRanges;       // This is specific to functor instead of variable so that MetricTaker::operator needn't use indices.
-  unsigned int parameters{};// Stores index, in 'paramIndices', where this functor's information begins.
-  unsigned int cIndex{};    // Stores location of constants.
+  fptype *
+      normRanges;  // This is specific to functor instead of variable so that MetricTaker::operator needn't use indices.
+  unsigned int parameters{};  // Stores index, in 'paramIndices', where this functor's information begins.
+  unsigned int cIndex{};      // Stores location of constants.
   obsCont observables;
   parCont parameterList;
   FitControl *fitControl;
   std::vector<PdfBase *> components;
   int integrationBins;
-  int specialMask;// For storing information unique to PDFs, eg "Normalise me separately" for TddpPdf.
+  int specialMask;  // For storing information unique to PDFs, eg "Normalise me separately" for TddpPdf.
   mutable fptype *cachedParams;
-  bool properlyInitialised;// Allows checking for required extra steps in, eg, Tddp and Convolution.
+  bool properlyInitialised;  // Allows checking for required extra steps in, eg, Tddp and Convolution.
 
-  unsigned int functionIdx{};// Stores index of device function pointer.
+  unsigned int functionIdx{};  // Stores index of device function pointer.
   int pdfId;
 
-  private:
+private:
   std::string name;
 
   __host__ int registerPdf();
@@ -119,6 +120,5 @@ class PdfBase {
   __host__ void setIndices();
   friend class DumperPdf<SumLikelihoodPdf>;
 };
-
 
 #endif

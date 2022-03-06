@@ -31,13 +31,13 @@ __host__ void PdfBase::copyParams() const {
   parCont pars;
   getParameters(pars);
   int maxIndex = -1;
-  for (auto &par: pars) {
+  for (auto &par : pars) {
     if (maxIndex < par->getIndex()) {
       maxIndex = par->getIndex();
     }
   }
   std::vector<double> values(host_params, host_params + maxIndex + 1);
-  for (auto &par: pars) {
+  for (auto &par : pars) {
     values[par->getIndex()] = par->value;
   }
   copyParams(values);
@@ -45,7 +45,7 @@ __host__ void PdfBase::copyParams() const {
 
 __host__ void PdfBase::copyNormFactors() {
   //MEMCPY_TO_SYMBOL(normalisationFactors, host_normalisation, totalParams*sizeof(fptype), 0, cudaMemcpyHostToDevice);
-  SYNCH();// Ensure normalisation integrals are finished
+  SYNCH();  // Ensure normalisation integrals are finished
 }
 
 __host__ void PdfBase::initialiseIndices(std::vector<unsigned int> pindices) {
@@ -58,7 +58,8 @@ __host__ void PdfBase::initialiseIndices(std::vector<unsigned int> pindices) {
   // before we know what observables exist.
 
   if (totalParams + pindices.size() >= maxIndicies) {
-    std::cout << "Major problem with pindices size: " << totalParams << " + " << pindices.size() << " >= " << maxIndicies << std::endl;
+    std::cout << "Major problem with pindices size: " << totalParams << " + " << pindices.size()
+              << " >= " << maxIndicies << std::endl;
   }
 
   assert(totalParams + pindices.size() < maxIndicies);
@@ -84,11 +85,14 @@ __host__ void PdfBase::initialiseIndices(std::vector<unsigned int> pindices) {
 }
 
 __host__ void PdfBase::setData(std::vector<std::map<Variable *, fptype>> &__attribute__((__unused__)) data) {
-  abortWithCudaPrintFlush(__FILE__, __LINE__, "not possible to use this method. one Variable could correspond to different index, to save space");
+  abortWithCudaPrintFlush(
+      __FILE__,
+      __LINE__,
+      "not possible to use this method. one Variable could correspond to different index, to save space");
 }
 
 __host__ void PdfBase::recursiveSetIndices() {
-  for (auto &component: components) {
+  for (auto &component : components) {
     component->recursiveSetIndices();
   }
 
@@ -160,7 +164,7 @@ __host__ void PdfBase::setData(BinnedDataSet *data) {
   if (numEntries <= 0) {
     abortWithCudaPrintFlush(__FILE__, __LINE__, "0 entries. check the numbins of the variable of your data set", this);
   }
-  int dimensions = 2 + observables.size();// Bin center (x,y, ...), bin value, and bin volume.
+  int dimensions = 2 + observables.size();  // Bin center (x,y, ...), bin value, and bin volume.
   if (!fitControl->binnedFit()) {
     setFitControl(new BinnedNllFit());
   }
@@ -178,7 +182,8 @@ __host__ void PdfBase::setData(BinnedDataSet *data) {
       }
 
       host_array[i * dimensions + observables.size() + 0] = data->getBinContent(i);
-      host_array[i * dimensions + observables.size() + 1] = fitControl->binErrors() ? data->getBinError(i) : data->getBinVolume(i);
+      host_array[i * dimensions + observables.size() + 1] =
+          fitControl->binErrors() ? data->getBinError(i) : data->getBinVolume(i);
       numEvents += data->getBinContent(i);
     }
 
@@ -196,7 +201,7 @@ __host__ void PdfBase::generateNormRange() {
   gooMalloc(reinterpret_cast<void **>(&normRanges), 3 * observables.size() * sizeof(fptype));
 
   auto *host_norms = new fptype[3 * observables.size()];
-  int counter = 0;// Don't use index in this case to allow for, eg,
+  int counter = 0;  // Don't use index in this case to allow for, eg,
   // a single observable whose index is 1; or two observables with indices
   // 0 and 2. Make one array per functor, as opposed to variable, to make
   // it easy to pass MetricTaker a range without worrying about which parts
@@ -221,20 +226,21 @@ void PdfBase::clearCurrentFit() const {
 __host__ void PdfBase::printProfileInfo(bool __attribute__((__unused__)) topLevel) {
 #ifdef PROFILING
   if (topLevel) {
-    cudaError_t err = MEMCPY_FROM_SYMBOL(host_timeHist, timeHistogram, 10000 * sizeof(fptype), 0, cudaMemcpyDeviceToHost);
+    cudaError_t err =
+        MEMCPY_FROM_SYMBOL(host_timeHist, timeHistogram, 10000 * sizeof(fptype), 0, cudaMemcpyDeviceToHost);
     if (cudaSuccess != err) {
       std::cout << "Error on copying timeHistogram: " << cudaGetErrorString(err) << std::endl;
       return;
     }
 
-    std::cout << getName() << " : " << getFunctionIndex() << " " << host_timeHist[100 * getFunctionIndex() + getParameterIndex()] << std::endl;
+    std::cout << getName() << " : " << getFunctionIndex() << " "
+              << host_timeHist[100 * getFunctionIndex() + getParameterIndex()] << std::endl;
     for (unsigned int i = 0; i < components.size(); ++i) {
       components[i]->printProfileInfo(false);
     }
   }
 #endif
 }
-
 
 gooError gooMalloc(void **target, size_t bytes) {
   // Thrust 1.7 will make the use of THRUST_DEVICE_BACKEND an error
@@ -247,7 +253,7 @@ gooError gooMalloc(void **target, size_t bytes) {
 #else
   if (cudaMalloc(target, bytes) != cudaSuccess)
     throw std::runtime_error("cannot allocate enough memory on the device");
-  return (gooError) cudaSuccess;
+  return (gooError)cudaSuccess;
 #endif
 }
 
@@ -258,7 +264,7 @@ gooError gooFree(void *ptr) {
   free(ptr);
   ret = gooSuccess;
 #else
-  ret = (gooError) cudaFree(ptr);
+  ret = (gooError)cudaFree(ptr);
 #endif
   ptr = nullptr;
   return ret;

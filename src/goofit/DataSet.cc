@@ -1,36 +1,34 @@
 #include "goofit/DataSet.h"
 #include "goofit/Variable.h"
 
-DataSet::DataSet(Variable *var, std::string n)
-    : numEventsAdded(0), name(n) {
+DataSet::DataSet(Variable *var, std::string n) : numEventsAdded(0), name(n) {
   variables.push_back(var);
-  if (n.empty()) { generateName();
-}
+  if (n.empty()) {
+    generateName();
+  }
 }
 
-DataSet::DataSet(std::vector<Variable *> &vars, std::string n)
-    : numEventsAdded(0), name(n) {
-  for (auto & var : vars) {
+DataSet::DataSet(std::vector<Variable *> &vars, std::string n) : numEventsAdded(0), name(n) {
+  for (auto &var : vars) {
     variables.push_back(var);
   }
-  if (n.empty()) { generateName();
-}
+  if (n.empty()) {
+    generateName();
+  }
 }
 
-DataSet::DataSet(std::set<Variable *> &vars, std::string n)
-    : numEventsAdded(0), name(n) {
+DataSet::DataSet(std::set<Variable *> &vars, std::string n) : numEventsAdded(0), name(n) {
   variables.resize(vars.size());
 
   for (auto *var : vars) {
     variables[var->index] = var;
   }
-  if (n.empty()) { generateName();
-}
+  if (n.empty()) {
+    generateName();
+  }
 }
 
-DataSet::~DataSet() {
-  variables.clear();
-}
+DataSet::~DataSet() { variables.clear(); }
 
 void DataSet::addEvent() {
   std::vector<fptype> vals = getCurrentValues();
@@ -61,21 +59,20 @@ std::vector<fptype> DataSet::getCurrentValues() const {
 }
 
 void DataSet::getVariables(std::vector<Variable *> &vars) {
-  for (auto & variable : variables) {
+  for (auto &variable : variables) {
     vars.push_back(variable);
   }
 }
 
 unsigned int DataSet::indexOfVariable(Variable *var) const {
   for (unsigned int i = 0; i < variables.size(); ++i) {
-    if (var != variables[i]) { continue;
-}
+    if (var != variables[i]) {
+      continue;
+    }
     return i;
   }
 
-  std::cout << "Error: Attempted to get index of variable "
-            << var->name
-            << " in DataSet of ";
+  std::cout << "Error: Attempted to get index of variable " << var->name << " in DataSet of ";
   for (auto v = varsBegin(); v != varsEnd(); ++v) {
     std::cout << "\n  " << (*v)->name << std::endl;
   }
@@ -85,14 +82,16 @@ unsigned int DataSet::indexOfVariable(Variable *var) const {
 
 void DataSet::generateName() {
   // Create default name as list of variables.
-  if (!name.empty()) { return;
-}
+  if (!name.empty()) {
+    return;
+  }
   for (auto v = varsBegin(); v != varsEnd(); ++v) {
     name += (*v)->name;
     auto next = v;
     next++;
-    if (next == varsEnd()) { continue;
-}
+    if (next == varsEnd()) {
+      continue;
+    }
     name += ", ";
   }
 }

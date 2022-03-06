@@ -4,11 +4,10 @@
 #include "goofit/PDFs/GooPdf.h"
 
 class ExpPdf : public GooPdf {
-  public:
+public:
   ExpPdf(std::string n, Variable *_x, Variable *alpha);
 
-
-  private:
+private:
 };
 
 #endif

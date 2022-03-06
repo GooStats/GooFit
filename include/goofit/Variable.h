@@ -8,8 +8,8 @@
 struct Indexable {
   explicit Indexable(std::string n, fptype val = 0) : name(std::move(n)), value(val), index(-1) {}
 
-  int getIndex() const {return index;}
-  std::string name; 
+  int getIndex() const { return index; }
+  std::string name;
   fptype value;
   int index;
 };
