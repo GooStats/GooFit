@@ -1,14 +1,16 @@
 #include "goofit/FitControl.h"
+
 #include "goofit/PdfBase.h"
+#include <utility>
 
 FitControl::FitControl (bool bin, std::string mn) 
   : binned(bin) 
-  , metricName(mn)
-  , owner(0)
+  , metricName(std::move(mn))
+  , owner(nullptr)
   , errorsOnBins(false)
 {}
 
-FitControl::~FitControl () {} 
+FitControl::~FitControl () = default; 
 
 void FitControl::setOwner (PdfBase* dat) {
   assert(!owner); 

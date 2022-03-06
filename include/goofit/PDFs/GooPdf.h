@@ -40,7 +40,7 @@ class GooPdf : public PdfBase {
   __host__ void getCompProbsAtDataPoints(std::vector<std::vector<fptype>> &values);
   __host__ void initialise(std::vector<unsigned int> pindices, void *dev_functionPtr = host_fcn_ptr);
   __host__ void scan(Variable *var, std::vector<fptype> &values);
-  __host__ virtual void setFitControl(FitControl *const fc, bool takeOwnerShip = true);
+  __host__ virtual void setFitControl(FitControl *const fc, bool takeOwnerShip );
   __host__ bool IsChisquareFit() const;
   __host__ virtual void setMetrics();
   __host__ void setParameterConstantness(bool constant = true);

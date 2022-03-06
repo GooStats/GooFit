@@ -13,7 +13,7 @@ public:
   UnbinnedDataSet (std::set<Variable*>& vars, std::string n = "");
   ~UnbinnedDataSet (); 
 
-  virtual void addEventVector (std::vector<fptype>& vals, fptype weight = 1); 
+  virtual void addEventVector (std::vector<fptype>& vals, fptype weight);
   int getNumEvents () const {return data.size();} 
   fptype getValue (Variable* var, int idx) const; 
   void loadEvent (int idx); 

@@ -14,7 +14,7 @@ UnbinnedDataSet::UnbinnedDataSet (std::set<Variable*>& vars, std::string n)
   : DataSet(vars, n)
 {}
   
-UnbinnedDataSet::~UnbinnedDataSet () {} 
+UnbinnedDataSet::~UnbinnedDataSet () = default; 
 
 fptype UnbinnedDataSet::getValue (Variable* var, int idx) const {
   if (idx >= getNumEvents()) {
@@ -36,7 +36,7 @@ fptype UnbinnedDataSet::getValue (Variable* var, int idx) const {
     return -1; 
   }
 
-  std::map<Variable*, fptype>::const_iterator event = data[idx].find(var); 
+  auto event = data[idx].find(var); 
   if (event == data[idx].end()) {
     static std::map<std::string, bool> printed;
     if (!printed[var->name]) {
@@ -59,11 +59,10 @@ void UnbinnedDataSet::addEventVector (std::vector<fptype>& vals, fptype /*weight
   // NB, unbinned data set ignores weights. 
   numEventsAdded++; 
 
-  varConstIt currVar = varsBegin(); 
+  auto currVar = varsBegin(); 
   std::map<Variable*, fptype> currEvent; 
-  for (unsigned int i = 0; i < vals.size(); ++i) {
+  for (double currVal : vals) {
     assert(currVar != varsEnd()); 
-    double currVal = vals[i]; 
     if (currVal < (*currVar)->lowerlimit) {
       std::cout << "Warning: Value " 
 		<< currVal 
@@ -108,13 +107,13 @@ void UnbinnedDataSet::loadEvent (int idx) {
     return; 
   }
 
-  for (std::map<Variable*, fptype>::iterator v = data[idx].begin(); v != data[idx].end(); ++v) {
-    (*v).first->value = (*v).second;
+  for (auto & v : data[idx]) {
+    v.first->value = v.second;
   }
 }
 
 void UnbinnedDataSet::setValueForAllEvents (Variable* var) {
-  for (std::vector<std::map<Variable*, fptype> >::iterator i = data.begin(); i != data.end(); ++i) {
-    (*i)[var] = var->value; 
+  for (auto & i : data) {
+    i[var] = var->value; 
   }
 }

@@ -89,13 +89,8 @@ EXEC_TARGET fptype calculateEval(fptype rawPdf, fptype *evtVal, unsigned int par
   return rawPdf;
 }
 
-<<<<<<< HEAD
-EXEC_TARGET fptype calculateNLL(fptype rawPdf, fptype *evtVal, unsigned int par) {
+EXEC_TARGET fptype calculateNLL(fptype rawPdf, [[maybe_unused]] fptype *evtVal, unsigned int par) {
   //  rawPdf *= normalisationFactors[par];
-=======
-EXEC_TARGET fptype calculateNLL (fptype rawPdf, [[maybe_unused]] fptype* evtVal, unsigned int par) {
-//  rawPdf *= normalisationFactors[par];
->>>>>>> clang-tidy update
   return -EVALLOG(rawPdf);
 }
 
@@ -222,7 +217,7 @@ __host__ int GooPdf::findFunctionIdx(void *dev_functionPtr) {
 }
 
 __host__ void GooPdf::initialise(std::vector<unsigned int> pindices, void *dev_functionPtr) {
-  if (!fitControl) setFitControl(new UnbinnedNllFit());
+  if (!fitControl) setFitControl(new UnbinnedNllFit(), true);
 
   // MetricTaker must be created after PdfBase initialisation is done.
   PdfBase::initialiseIndices(pindices);
@@ -254,8 +249,9 @@ __host__ double GooPdf::calculateNLL() const {
   // this is the exact start of the GooFit minimization
   normalise();
 
-  if (host_normalisation[parameters] <= 0)
+  if (host_normalisation[parameters] <= 0) {
     abortWithCudaPrintFlush(__FILE__, __LINE__, getName() + " non-positive normalisation", this);
+  };
   //
   //  MEMCPY_TO_SYMBOL(normalisationFactors, host_normalisation, totalParams*sizeof(fptype), 0, cudaMemcpyHostToDevice);
   //  SYNCH(); // Ensure normalisation integrals are finished
@@ -314,8 +310,8 @@ __host__ double GooPdf::evaluateAtPoints(const std::vector<double> &v) {
   normalise();
   //  MEMCPY_TO_SYMBOL(normalisationFactors, host_normalisation, totalParams*sizeof(fptype), 0, cudaMemcpyHostToDevice);
   UnbinnedDataSet tempdata(observables);
-  assert(v.size()==observables.size());
-  for(auto i = 0;i<v.size();++i) {
+  assert(v.size() == observables.size());
+  for (auto i = 0; i < v.size(); ++i) {
     observables.at(i)->value = v.at(i);
   }
   tempdata.addEvent();
@@ -341,13 +337,14 @@ __host__ void GooPdf::scan(Variable *var, std::vector<fptype> &values) {
   step -= var->lowerlimit;
   step /= var->numbins;
   values.clear();
-  for (fptype v = var->lowerlimit + 0.5 * step; v < var->upperlimit; v += step) {
-    var->value = v;
+  for (int i = 0; i < var->numbins; ++i) {
+    var->value = var->lowerlimit + (i + 0.5) * step;
     copyParams();
     parCont pars;
     getParameters(pars);
-    for (unsigned int j = 0; j < pars.size(); ++j)
+    for (unsigned int j = 0; j < pars.size(); ++j) {
       printf("p%d %p %lf ", j, pars.at(j), pars.at(j)->value);
+    }
     printf("\n");
     fptype curr = calculateNLL();
     values.push_back(curr);
@@ -422,8 +419,9 @@ __host__ fptype GooPdf::normalise() const {
   thrust::constant_iterator<fptype *> arrayAddress(normRanges);
   thrust::constant_iterator<int> eventSize(observables.size());
   thrust::counting_iterator<int> binIndex(0);
-  if (normRanges == nullptr)
+  if (normRanges == nullptr) {
     abortWithCudaPrintFlush(__FILE__, __LINE__, getName() + " invalid normRanges. forgot to call PdfBase::setData", this);
+  }
 
   fptype sum = thrust::transform_reduce(thrust::make_zip_iterator(thrust::make_tuple(binIndex, eventSize, arrayAddress)),
                                         thrust::make_zip_iterator(thrust::make_tuple(binIndex + totalBins, eventSize, arrayAddress)),
@@ -440,7 +438,7 @@ __host__ fptype GooPdf::normalise() const {
 
   if (0 == ret) abortWithCudaPrintFlush(__FILE__, __LINE__, "Zero integral");
   host_normalisation[parameters] = 1.0 / ret;
-  return (fptype) ret;
+  return ret;
 }
 
 #ifdef PROFILING
@@ -506,7 +504,7 @@ EXEC_TARGET fptype BinnedMetricTaker::operator()(thrust::tuple<int, int, fptype 
     const fptype *normRanges = thrust::get<2>(t);
     const fptype lowerBound = normRanges[3 * i + 0];
     const fptype upperBound = normRanges[3 * i + 1];
-    const int numBins = (int) FLOOR(normRanges[3 * i + 2] + 0.5);
+    const int numBins = static_cast<int>(FLOOR(normRanges[3 * i + 2] + 0.5));
     const int localBin = binNumber % numBins;
 
 
@@ -520,17 +518,10 @@ EXEC_TARGET fptype BinnedMetricTaker::operator()(thrust::tuple<int, int, fptype 
   return callFunction(binCenters + THREADIDX * MAX_NUM_OBSERVABLES, functionIdx, parameters);
 }
 
-<<<<<<< HEAD
 __host__ void GooPdf::getCompProbsAtDataPoints(std::vector<std::vector<fptype>> &values) {
   copyParams();
-  double overall = normalise();
-  //  MEMCPY_TO_SYMBOL(normalisationFactors, host_normalisation, totalParams*sizeof(fptype), 0, cudaMemcpyHostToDevice);
-=======
-__host__ void GooPdf::getCompProbsAtDataPoints (std::vector<std::vector<fptype> >& values) {
-  copyParams(); 
   normalise();
-//  MEMCPY_TO_SYMBOL(normalisationFactors, host_normalisation, totalParams*sizeof(fptype), 0, cudaMemcpyHostToDevice); 
->>>>>>> clang-tidy update
+  //  MEMCPY_TO_SYMBOL(normalisationFactors, host_normalisation, totalParams*sizeof(fptype), 0, cudaMemcpyHostToDevice);
 
   int numVars = observables.size();
   if (fitControl->binnedFit()) {
@@ -601,13 +592,14 @@ __host__ void GooPdf::debug() const {
   int totpar = indices[0];
   int totobs = indices[indices[0] + 1];
   std::cout << "-(totpar)" << totpar;
-  for (int i = 0; i < totpar; ++i)
+  for (int i = 0; i < totpar; ++i) {
     std::cout << "-(par" << i << ")" << indices[i + 1];
+  }
   std::cout << "-(totobs)" << totobs;
-  for (int i = 0; i < totobs; ++i)
+  for (int i = 0; i < totobs; ++i) {
     std::cout << "-(obs" << i << ")" << indices[i + totpar + 2];
+  }
   std::cout << std::endl;
-  indices = (unsigned int *) 0;
   delete[] devcpy_indices;
 
   indices = host_indices + parameters;
@@ -615,11 +607,13 @@ __host__ void GooPdf::debug() const {
   totobs = indices[indices[0] + 1];
   std::cout << getName() << " from host ini cond: id";
   std::cout << "-(totpar)" << totpar;
-  for (int i = 0; i < totpar; ++i)
+  for (int i = 0; i < totpar; ++i) {
     std::cout << "-(par" << i << ")" << indices[i + 1];
+  }
   std::cout << "-(totobs)" << totobs;
-  for (int i = 0; i < totobs; ++i)
+  for (int i = 0; i < totobs; ++i) {
     std::cout << "-(obs" << i << ")" << indices[i + totpar + 2];
+  }
   std::cout << std::endl;
 }
 

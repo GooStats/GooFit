@@ -24,9 +24,7 @@ EXEC_TARGET fptype device_SumPdfsExt_withSys(fptype *evt, fptype *p,
   const fptype npe_val = evt[RO_CACHE(indices[2 + RO_CACHE(indices[0])])];
   const fptype npe_lo = RO_CACHE(functorConstants[cIndex]);
   const fptype npe_step = RO_CACHE(functorConstants[cIndex + 1]);
-  const int npe_bin = (int) FLOOR((npe_val - npe_lo) /
-                                  npe_step);// no problem with FLOOR: start from
-                                            // 0.5, which corresponse to bin=0
+  const int npe_bin = static_cast<int>(FLOOR((npe_val - npe_lo) / npe_step));
   const int Ncomps = RO_CACHE(indices[2]);
   fptype ret = 0;
   for (int par = 0; par < Ncomps; ++par) {
@@ -64,9 +62,7 @@ EXEC_TARGET fptype device_SumPdfsExt(fptype *evt, fptype *p,
   const fptype npe_val = evt[RO_CACHE(indices[2 + RO_CACHE(indices[0])])];
   const fptype npe_lo = RO_CACHE(functorConstants[cIndex]);
   const fptype npe_step = RO_CACHE(functorConstants[cIndex + 1]);
-  const int npe_bin = (int) FLOOR((npe_val - npe_lo) /
-                                  npe_step);// no problem with FLOOR: start from
-                                            // 0.5, which corresponse to bin=0
+  const int npe_bin = static_cast<int>(FLOOR((npe_val - npe_lo) / npe_step));
   const int Ncomps = RO_CACHE(indices[2]);
   fptype ret = 0;
   for (int par = 0; par < Ncomps; ++par) {
@@ -92,9 +88,7 @@ EXEC_TARGET fptype device_SumPdfsExtMask(fptype *evt, fptype *,
   const fptype npe_val = evt[RO_CACHE(indices[2 + RO_CACHE(indices[0])])];
   const fptype npe_lo = RO_CACHE(functorConstants[cIndex]);
   const fptype npe_step = RO_CACHE(functorConstants[cIndex + 1]);
-  const int npe_bin = (int) FLOOR((npe_val - npe_lo) /
-                                  npe_step);// no problem with FLOOR: start from
-                                            // 0.5, which corresponse to bin=0
+  const int npe_bin = static_cast<int>(FLOOR((npe_val - npe_lo) / npe_step));
   const int Ncomps = RO_CACHE(indices[2]);
   fptype ret = 0;
 #ifdef convolution_CHECK
@@ -127,9 +121,7 @@ EXEC_TARGET fptype device_SumPdfsExtSimple(fptype *evt, fptype *,
   const fptype npe_val = evt[RO_CACHE(indices[2 + RO_CACHE(indices[0])])];
   const fptype npe_lo = RO_CACHE(functorConstants[cIndex]);
   const fptype npe_step = RO_CACHE(functorConstants[cIndex + 1]);
-  const int npe_bin = (int) FLOOR((npe_val - npe_lo) /
-                                  npe_step);// no problem with FLOOR: start from
-                                            // 0.5, which corresponse to bin=0
+  const int npe_bin = static_cast<int>(FLOOR((npe_val - npe_lo) / npe_step));
   const int Ncomps = RO_CACHE(indices[2]);
   fptype ret = 0;
   for (int par = 0; par < Ncomps; ++par) {
@@ -167,16 +159,18 @@ SumPdf::SumPdf(std::string n, const fptype norm_,
   }
 
   for (unsigned int w = 0; w < sysi.size(); ++w) {
-    if (sysi.at(w))
+    if (sysi.at(w)) {
       pindices.push_back(registerParameter(sysi[w]));
-    else
+    } else {
       pindices.push_back(0);
+}
   }
 
-  if (sys)
+  if (sys) {
     pindices.push_back(registerParameter(sys));
-  else
+  } else {
     pindices.push_back(0);
+}
 
   GET_FUNCTION_ADDR(ptr_to_SumPdfsExt_withSys);
 
@@ -232,7 +226,7 @@ void SumPdf::set_startstep(fptype norm) {
           cudaMemcpyHostToDevice);// cIndex is a member derived from PdfBase and is
                                   // set inside registerConstants method
 
-  gooMalloc((void **) &dev_iConsts, 3 * sizeof(fptype));
+  gooMalloc(reinterpret_cast<void **>(&dev_iConsts), 3 * sizeof(fptype));
   host_iConsts[0] = npe->lowerlimit;
   host_iConsts[1] = npe->upperlimit;
   host_iConsts[2] = npe->numbins;
@@ -339,7 +333,7 @@ std::unique_ptr<fptype[]> SumPdf::fill_random() {
 
   if (parametersChanged()) {
     DEVICE_VECTOR<fptype> dev_sumV(numEntries);
-    MetricTaker modalor((PdfBase *) (this), getMetricPointer("ptr_to_Eval"));
+    MetricTaker modalor(static_cast<PdfBase *> (this), getMetricPointer("ptr_to_Eval"));
     thrust::constant_iterator<int> eventSize(-(observables.size() + 2));
     thrust::constant_iterator<fptype *> arrayAddress(dev_event_array[pdfId]);
     thrust::counting_iterator<int> eventIndex(0);
@@ -371,7 +365,7 @@ std::unique_ptr<fptype[]> SumPdf::fill_random() {
     gooFree(dev_event_array[pdfId]);
     dev_event_array[pdfId] = 0;
   }
-  gooMalloc((void **) &(dev_event_array[pdfId]),
+  gooMalloc(reinterpret_cast<void **>(&(dev_event_array[pdfId])),
             dimensions * numEntries * sizeof(fptype));
   MEMCPY(dev_event_array[pdfId], host_array,
          dimensions * numEntries * sizeof(fptype), cudaMemcpyHostToDevice);
@@ -389,7 +383,7 @@ std::unique_ptr<fptype[]> SumPdf::fill_Asimov() {
 
   if (parametersChanged()) {
     DEVICE_VECTOR<fptype> dev_sumV(numEntries);
-    MetricTaker modalor((PdfBase *) (this), getMetricPointer("ptr_to_Eval"));
+    MetricTaker modalor(static_cast<PdfBase *> (this), getMetricPointer("ptr_to_Eval"));
     thrust::constant_iterator<int> eventSize(-(observables.size() + 2));
     thrust::constant_iterator<fptype *> arrayAddress(dev_event_array[pdfId]);
     thrust::counting_iterator<int> eventIndex(0);
@@ -421,7 +415,7 @@ std::unique_ptr<fptype[]> SumPdf::fill_Asimov() {
     gooFree(dev_event_array[pdfId]);
     dev_event_array[pdfId] = 0;
   }
-  gooMalloc((void **) &(dev_event_array[pdfId]),
+  gooMalloc(reinterpret_cast<void **>(&(dev_event_array[pdfId])),
             dimensions * numEntries * sizeof(fptype));
   MEMCPY(dev_event_array[pdfId], host_array,
          dimensions * numEntries * sizeof(fptype), cudaMemcpyHostToDevice);
@@ -460,8 +454,9 @@ int SumPdf::NDF() {
   {
     getData();
     for (unsigned int i = 0; i < numEntries; ++i) {
-      if (dataset->getBinContent(i) > 0)
+      if (dataset->getBinContent(i) > 0) {
         NnonZeroBins++;
+}
     }
   }
   return NnonZeroBins - Nfree();
@@ -471,8 +466,9 @@ int SumPdf::Nfree() {
   parCont params;
   getParameters(params);
   for (auto par: params) {
-    if (!(par->fixed || par->error == 0))
+    if (!(par->fixed || par->error == 0)) {
       NfreePar++;
+}
   }
   return NfreePar;
 }
@@ -496,7 +492,7 @@ __host__ double SumPdf::sumOfNll(int numVars) const {
   static bool first = false;
   thrust::host_vector<fptype> logL = results;
   DEVICE_VECTOR<fptype> dev_sumV(numEntries);
-  MetricTaker modalor((PdfBase *) (this), getMetricPointer("ptr_to_Eval"));
+  MetricTaker modalor(const_cast<PdfBase *> (static_cast<const PdfBase*>(this)), getMetricPointer("ptr_to_Eval"));
   thrust::transform(thrust::make_zip_iterator(thrust::make_tuple(
                             eventIndex, arrayAddress, eventSize)),
                     thrust::make_zip_iterator(thrust::make_tuple(
@@ -528,15 +524,16 @@ __host__ double SumPdf::sumOfNll(int numVars) const {
       GooStatsNLLCheck::get()->record_species(i, components.at(j)->getName(),
                                               result);
     }
-    //    printf("\n");
+    //    p {rintf("\n");
   }
-  if (first) {
-    sum = 0;
-    first = false;
-  } else
-    first = true;
-  delete[] host_array;
-  // debug end
-  return thrust::reduce(results.begin(), results.end(), dummy, cudaPlus);
+if (first) {
+  sum = 0;
+  first = false;
+} else {
+  first = true;
+}
+delete[] host_array;
+// debug end
+return thrust::reduce(results.begin(), results.end(), dummy, cudaPlus);
 }
 #endif
