@@ -1,0 +1,146 @@
+{
+   Suppression
+   Memcheck:Cond
+   ...
+   fun:_ZN7TObjectD2Ev
+}
+{
+   Suppression
+   Memcheck:Cond
+   ...
+   fun:_ZN5TROOTD2Ev
+}
+{
+   Suppression
+   Memcheck:Cond
+   ...
+   fun:_ZN5TListD2Ev
+}
+
+{
+   Suppression
+   Memcheck:Cond
+   ...
+   fun:_ZN10TObjStringD2Ev
+}
+{
+   Suppression
+   Memcheck:Cond
+   ...
+   fun:_ZN5TFileD2Ev
+}
+{
+   Suppression
+   Memcheck:Cond
+   ...
+   fun:_ZN5TFileD2Ev
+}
+{
+   Suppression
+   Memcheck:Cond
+   ...
+   fun:_ZN8TMemFileD2Ev
+}
+{
+   Suppression
+   Memcheck:Cond
+   ...
+   fun:_ZN14TDirectoryFileD2Ev
+}
+{
+   Suppression
+   Memcheck:Cond
+   ...
+   fun:_ZN6TNamedD2Ev
+}
+
+{
+   FitManager::setupMinuit()
+   Memcheck:Cond
+   ...
+   fun:_ZN4ROOT8Internal8GetROOT2Ev
+}
+
+{
+   Suppression
+   Memcheck:Leak
+   ...
+   fun:_ZN5cling17IncrementalParser13ParseInternalEN4llvm9StringRefE
+}
+
+{
+   Suppression
+   Memcheck:Leak
+   ...
+   fun:_ZN4dyld24initializeMainExecutableEv
+}
+
+{
+   Suppression
+   Memcheck:Leak
+   ...
+   fun:_ZN11ImageLoader19processInitializersERKNS_11LinkContextEjRNS_21InitializerTimingListERNS_15UninitedUpwardsE
+}
+
+{
+   Suppression
+   Memcheck:Leak
+   ...
+   fun:libSystem_initializer
+}
+
+{
+   Suppression
+   Memcheck:Leak
+   ...
+   fun:_ZL16addRemappedClassP10objc_classS0_
+}
+
+{
+   Suppression
+   Memcheck:Leak
+   ...
+   fun:_ZN11ImageLoader23recursiveInitialization*
+}
+
+{
+   Suppression
+   Memcheck:Leak
+   ...
+   fun:libdispatch_init
+}
+
+{
+   Suppression
+   Memcheck:Leak
+   ...
+   fun:search_item_bynumber
+}
+
+{
+   FitManager::setupMinuit()
+   Memcheck:Leak
+   ...
+   fun:_ZN4ROOT8Internal8GetROOT2Ev
+}
+
+{
+   Suppression
+   Memcheck:Leak
+   ...
+   fun:_ZN5clang6Parser32ParseUsingDirectiveOrDeclaration*
+}
+
+{
+   Suppression
+   Memcheck:Leak
+   ...
+   fun:_dispatch_client_callout
+}
+
+{
+   FitManager::setupMinuit()
+   Memcheck:Leak
+   ...
+   fun:_ZN7TMinuit6mnexcmEPKcPdiRi
+}
