@@ -6,7 +6,7 @@ ClassImp(GooStatsNLLCheck)  // NOLINT
   static GooStatsNLLCheck *me = nullptr;
   if (!me) {
     me = new GooStatsNLLCheck();
-}
+  }
   return me;
 }
 void GooStatsNLLCheck::init(const std::string &fname, const std::string &name) {

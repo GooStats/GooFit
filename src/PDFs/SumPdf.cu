@@ -7,10 +7,11 @@
 //
 // All rights reserved. 2018 copyrighted.
 /*****************************************************************************/
+#include <utility>
+
 #include "goofit/BinnedDataSet.h"
 #include "goofit/PDFs/SumPdf.h"
 #include "goofit/Variable.h"
-#include <utility>
 std::map<PdfBase *, int> SumPdf::funMap;
 MEM_DEVICE fptype *dev_componentWorkSpace[NPDFSIZE_SumPdf];
 DEVICE_VECTOR<fptype> *componentWorkSpace[NPDFSIZE_SumPdf];

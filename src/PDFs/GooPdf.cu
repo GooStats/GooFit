@@ -1,10 +1,11 @@
+#include <iostream>
+#include <map>
+
 #include "goofit/BinnedDataSet.h"
 #include "goofit/FitControl.h"
 #include "goofit/GlobalCudaDefines.h"
 #include "goofit/PDFs/GooPdf.h"
 #include "goofit/UnbinnedDataSet.h"
-#include <iostream>
-#include <map>
 
 // These variables are either function-pointer related (thus specific to this implementation)
 // or constrained to be in the CUDAglob translation unit by nvcc limitations; otherwise they

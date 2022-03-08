@@ -1,4 +1,5 @@
 #include "goofit/DataSet.h"
+
 #include "goofit/Variable.h"
 
 DataSet::DataSet(Variable *var, std::string n) : numEventsAdded(0), name(n) {

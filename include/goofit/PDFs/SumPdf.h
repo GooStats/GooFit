@@ -10,8 +10,9 @@
 #ifndef SUM_PDF_HH
 #define SUM_PDF_HH
 
-#include "DataPdf.h"
 #include <map>
+
+#include "DataPdf.h"
 class BinnedDataSet;
 #include <memory>
 #define NPDFSIZE_SumPdf 1000
@@ -19,7 +20,7 @@ extern MEM_DEVICE fptype *dev_componentWorkSpace[NPDFSIZE_SumPdf];
 extern DEVICE_VECTOR<fptype> *componentWorkSpace[NPDFSIZE_SumPdf];
 
 class SumPdf : public DataPdf {
-public:
+ public:
   SumPdf(std::string n,
          const fptype norm_,
          const std::vector<Variable *> &weights,
@@ -50,7 +51,7 @@ public:
   void cache() final;
   void restore() final;
 
-protected:
+ protected:
   void register_components(const std::vector<PdfBase *> &comps, int N);
   void set_startstep(fptype norm);
   __host__ void copyHistogramToDevice(const std::vector<const BinnedDataSet *> &masks);

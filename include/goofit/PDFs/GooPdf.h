@@ -1,7 +1,8 @@
 #ifndef THRUST_PDF_FUNCTOR_HH
 #define THRUST_PDF_FUNCTOR_HH
-#include "goofit/PdfBase.h"
 #include <cmath>
+
+#include "goofit/PdfBase.h"
 
 #define CALLS_TO_PRINT 10
 
@@ -21,7 +22,7 @@ class MetricTaker;
 class BinnedMetricTaker;
 
 class GooPdf : public PdfBase {
-public:
+ public:
   GooPdf(Variable *x, std::string n);
   __host__ virtual double calculateNLL() const;
   __host__ double evaluateAtPoints(const std::vector<double> &v);
@@ -48,29 +49,29 @@ public:
 
   __host__ void debug() const;
 
-protected:
+ protected:
   __host__ virtual double sumOfNll(int numVars) const;
   MetricTaker *logger;              // for calculating Nll
   BinnedMetricTaker *binnedlogger;  // for calculating Nll
 };
 
 class MetricTaker : public thrust::unary_function<thrust::tuple<int, fptype *, int>, fptype> {
-public:
+ public:
   MetricTaker(PdfBase *dat, void *dev_functionPtr);
   EXEC_TARGET fptype operator()(thrust::tuple<int, fptype *, int> t)
       const;  // Event number, dev_event_array(pass this way for nvcc reasons), event size
 
-private:
+ private:
   unsigned int metricIndex;  // Function-pointer index of processing function, eg logarithm, chi-square, other metric.
   unsigned int functionIdx;  // Function-pointer index of actual PDF
   unsigned int parameters;
 };
 class BinnedMetricTaker : public thrust::unary_function<thrust::tuple<int, int, fptype *>, fptype> {
-public:
+ public:
   BinnedMetricTaker(PdfBase *dat, void *dev_functionPtr);
   EXEC_TARGET fptype operator()(thrust::tuple<int, int, fptype *> t) const;  // Event number, event size, low/up/n
 
-private:
+ private:
   unsigned int metricIndex;  // Function-pointer index of processing function, eg logarithm, chi-square, other metric.
   unsigned int functionIdx;  // Function-pointer index of actual PDF
   unsigned int parameters;

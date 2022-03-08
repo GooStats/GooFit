@@ -1,17 +1,18 @@
 #ifndef DATASET_HH
 #define DATASET_HH
 
-#include "goofit/GlobalCudaDefines.h"
 #include <set>
 #include <string>
 #include <vector>
+
+#include "goofit/GlobalCudaDefines.h"
 struct Variable;
 
 typedef std::vector<Variable *>::const_iterator varConstIt;
 typedef std::vector<Variable *>::const_reverse_iterator varConstRIt;
 
 class DataSet {
-public:
+ public:
   DataSet(Variable *var, std::string n = "");
   DataSet(std::vector<Variable *> &vars, std::string n = "");
   DataSet(std::set<Variable *> &vars, std::string n = "");
@@ -33,12 +34,12 @@ public:
 
   std::string getName() const { return name; }
 
-protected:
+ protected:
   std::vector<fptype> getCurrentValues() const;
   unsigned int indexOfVariable(Variable *var) const;
   int numEventsAdded;
 
-private:
+ private:
   void generateName();
 
   std::vector<Variable *> variables;

@@ -9,12 +9,13 @@
 /*****************************************************************************/
 #ifndef GooStatsNLLCheck_H
 #define GooStatsNLLCheck_H
-#include "TNamed.h"
 #include <map>
 #include <string>
+
+#include "TNamed.h"
 class TFile;
 class GooStatsNLLCheck : public TNamed {
-public:
+ public:
   GooStatsNLLCheck() : _s_totLL(0) {}
   virtual ~GooStatsNLLCheck() {}
   static GooStatsNLLCheck *get();
@@ -37,7 +38,7 @@ public:
   const std::vector<double> &get_totLL() const { return totLL; }
   double get_finalLL() const { return finalLL; }
 
-private:
+ private:
   std::vector<double> totLL;
   std::vector<std::map<int, GooStatsNLLCheck::Info>> results;
   double finalLL;

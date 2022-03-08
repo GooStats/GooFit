@@ -8,7 +8,7 @@ struct Variable;
 void FitFun(int &npar, double *gin, double &fun, double *fp, int iflag);
 
 class FitManager {
-public:
+ public:
   FitManager(PdfBase *dat);
   ~FitManager();
   void setMaxCalls(double mxc) { overrideCallLimit = mxc; }
@@ -22,7 +22,7 @@ public:
   static bool minim_conv;
   static bool hesse_conv;
 
-private:
+ private:
   double overrideCallLimit;
 };
 

@@ -1,15 +1,16 @@
 #ifndef FITCONTROL_HH
 #define FITCONTROL_HH
 
-#include "goofit/GlobalCudaDefines.h"
-#include "goofit/Variable.h"
 #include <string>
 #include <vector>
+
+#include "goofit/GlobalCudaDefines.h"
+#include "goofit/Variable.h"
 
 class PdfBase;
 
 class FitControl {
-public:
+ public:
   FitControl(bool bin, std::string mn);
   ~FitControl();
 
@@ -20,39 +21,39 @@ public:
   inline PdfBase *getOwner() const { return owner; }
   void setOwner(PdfBase *dat);
 
-protected:
+ protected:
   bool errorsOnBins;
 
-private:
+ private:
   bool binned;
   std::string metricName;
   PdfBase *owner;
 };
 
 class UnbinnedNllFit : public FitControl {
-public:
+ public:
   UnbinnedNllFit();
 };
 
 class BinnedNllFit : public FitControl {
-public:
+ public:
   BinnedNllFit();
 };
 
 extern MEM_CONSTANT fptype dev_Nll_threshold[1];
 extern MEM_CONSTANT fptype dev_Nll_scaleFactor[1];
 class BinnedNllScaledFit : public FitControl {
-public:
+ public:
   BinnedNllScaledFit(double threshold, double scaleFactor);
 };
 
 class BinnedErrorFit : public FitControl {
-public:
+ public:
   BinnedErrorFit();
 };
 
 class BinnedChisqFit : public FitControl {
-public:
+ public:
   BinnedChisqFit();
 };
 

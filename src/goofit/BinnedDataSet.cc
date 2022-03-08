@@ -1,4 +1,5 @@
 #include "goofit/BinnedDataSet.h"
+
 #include "goofit/Variable.h"
 
 // Special constructor for one variable

@@ -1,4 +1,5 @@
 #include "goofit/Variable.h"
+
 #include <cmath>
 
 Variable::Variable(std::string n) : Indexable(n), numbins(100), blind(0) {}

@@ -60,7 +60,7 @@ __host__ int PdfBase::registerPdf() {
   return pdfIdMap.at(this);
 }
 __host__ unsigned int PdfBase::registerParameter(Variable *var) {
-  if (var == nullptr){
+  if (var == nullptr) {
     std::cout << "Error: Attempt to register null Variable with " << getName() << ", aborting.\n";
     assert(var);
     exit(1);

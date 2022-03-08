@@ -1,13 +1,14 @@
 #ifndef UNBINNED_DATASET_HH
 #define UNBINNED_DATASET_HH
 
-#include "goofit/DataSet.h"
 #include <map>
+
+#include "goofit/DataSet.h"
 
 class UnbinnedDataSet : public DataSet {
   // Class for unbinned datasets.
 
-public:
+ public:
   UnbinnedDataSet(Variable *var, std::string n = "");
   UnbinnedDataSet(std::vector<Variable *> &vars, std::string n = "");
   UnbinnedDataSet(std::set<Variable *> &vars, std::string n = "");
@@ -19,7 +20,7 @@ public:
   void loadEvent(int idx);
   void setValueForAllEvents(Variable *var);
 
-private:
+ private:
   std::vector<std::map<Variable *, fptype>> data;
 };
 

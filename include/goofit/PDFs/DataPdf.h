@@ -13,7 +13,7 @@
 #include "goofit/PDFs/GooPdf.h"
 
 class DataPdf : public GooPdf {
-public:
+ public:
   DataPdf(Variable *var, std::string n) : GooPdf(var, n){};
   virtual std::unique_ptr<fptype[]> fill_random() = 0;
   virtual std::unique_ptr<fptype[]> fill_Asimov() = 0;

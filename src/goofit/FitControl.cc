@@ -1,7 +1,8 @@
 #include "goofit/FitControl.h"
 
-#include "goofit/PdfBase.h"
 #include <utility>
+
+#include "goofit/PdfBase.h"
 
 FitControl::FitControl(bool bin, std::string mn)
     : binned(bin), metricName(std::move(mn)), owner(nullptr), errorsOnBins(false) {}

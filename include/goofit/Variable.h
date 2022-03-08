@@ -1,9 +1,10 @@
 #ifndef VARIABLE_HH
 #define VARIABLE_HH
 
-#include "goofit/GlobalCudaDefines.h"
 #include <string>
 #include <utility>
+
+#include "goofit/GlobalCudaDefines.h"
 
 struct Indexable {
   explicit Indexable(std::string n, fptype val = 0) : name(std::move(n)), value(val), index(-1) {}

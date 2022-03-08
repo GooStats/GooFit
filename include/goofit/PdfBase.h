@@ -1,8 +1,9 @@
 #ifndef PDF_BASE_HH
 #define PDF_BASE_HH
-#include "goofit/GlobalCudaDefines.h"
 #include <map>
 #include <vector>
+
+#include "goofit/GlobalCudaDefines.h"
 
 struct Variable;
 class FitControl;
@@ -36,7 +37,7 @@ extern void *host_function_table[200];
 extern unsigned int num_device_functions;
 
 class PdfBase {
-public:
+ public:
   PdfBase(Variable *x, std::string n);
   virtual ~PdfBase() {}
 
@@ -90,7 +91,7 @@ public:
   __host__ void checkInitStatus(std::vector<std::string> &unInited) const;
   void clearCurrentFit() const;
 
-protected:
+ protected:
   std::string reflex_name_;  //< This is the name of the type of the PDF, for reflexion purposes. Must be set or
                              // RecursiveSetIndicies must be overloaded.
 
@@ -112,7 +113,7 @@ protected:
   unsigned int functionIdx{};  // Stores index of device function pointer.
   int pdfId;
 
-private:
+ private:
   std::string name;
 
   __host__ int registerPdf();
