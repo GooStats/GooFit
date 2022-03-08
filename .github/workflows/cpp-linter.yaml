@@ -27,7 +27,7 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y dpkg-dev cmake g++ gcc binutils libx11-dev libxpm-dev libxft-dev libxext-dev python libssl-dev
-          sudo apt-get install -y cmake wget ninja-build clang++ clang
+          sudo apt-get install -y cmake wget ninja-build
           pushd ../
           mkdir root
           wget --no-check-certificate --quiet -O - "${ROOT_URL}" | tar --strip-components=1 -xz -C root
@@ -41,10 +41,10 @@ jobs:
           cmake -S . -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
           export CXXFLAGS="-fsanitize-address-use-after-scope -fsanitize-recover=address"
           cmake -S . -B build-ASan "Ninja" -DCMAKE_BUILD_TYPE=Debug -DSANITIZE_ADDRESS=ON  \
-          -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ -DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang  \
+          -DCMAKE_CXX_COMPILER=clang++-12 -DCMAKE_C_COMPILER=clang-12  \
           -DCMAKE_VERBOSE_MAKEFILE=ON
           cmake -S . -B build-UBSan "Ninja" -DCMAKE_BUILD_TYPE=Debug -DSANITIZE_UNDEFINED=ON  \
-          -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ -DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang  \
+          -DCMAKE_CXX_COMPILER=clang++-12 -DCMAKE_C_COMPILER=clang-12  \
           -DCMAKE_VERBOSE_MAKEFILE=ON
 
       - uses: DingXuefeng/cpp-linter-action@master
