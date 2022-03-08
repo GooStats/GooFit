@@ -58,6 +58,7 @@ jobs:
           database: build
           extensions: cc,cu
           files-changed-only: false
+          verbosity: 5
 
       - name: check ASanh
         run: |
