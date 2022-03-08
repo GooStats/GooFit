@@ -27,7 +27,7 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y dpkg-dev cmake g++ gcc binutils libx11-dev libxpm-dev libxft-dev libxext-dev python libssl-dev
-          sudo apt-get install -y cmake wget ninja-build
+          sudo apt-get install -y cmake wget ninja-build clang++ clang
           pushd ../
           mkdir root
           wget --no-check-certificate --quiet -O - "${ROOT_URL}" | tar --strip-components=1 -xz -C root
@@ -38,7 +38,11 @@ jobs:
           source ../root/bin/thisroot.sh
           cmake --version
           rm -rf build
-          cmake -S . -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CXX_COMPILER=g++
+          cmake -S . -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+          export CXXFLAGS="-fsanitize-address-use-after-scope -fsanitize-recover=address"
+          cmake -S . -B build-clang-tidy -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DSANITIZE_ADDRESS=ON  \
+          -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ -DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin/clang  \
+          -DCMAKE_VERBOSE_MAKEFILE=ON
 
       - uses: DingXuefeng/cpp-linter-action@master
         id: linter
@@ -51,6 +55,14 @@ jobs:
           database: build
           extensions: cc,cu
           files-changed-only: false
+
+      - name: check ASanh
+        run: |
+          cmake --build build-clang-tidy
+          export ASAN_OPTIONS="detect_stack_use_after_return=true detect_leaks=1 strict_string_checks=1 check_initialization_order=1 strict_init_order=1 halt_on_error=0"
+          pushd build-clang-tidy 
+          ctest
+          popd
 
       - name: Fail fast?!
         if: steps.linter.outputs.checks-failed > 0
