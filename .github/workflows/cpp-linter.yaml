@@ -40,10 +40,10 @@ jobs:
           rm -rf build
           cmake -S . -B build -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
           export CXXFLAGS="-fsanitize-address-use-after-scope -fsanitize-recover=address"
-          cmake -S . -B build-ASan "Ninja" -DCMAKE_BUILD_TYPE=Debug -DSANITIZE_ADDRESS=ON  \
+          cmake -S . -B build-ASan -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DSANITIZE_ADDRESS=ON  \
           -DCMAKE_CXX_COMPILER=clang++-12 -DCMAKE_C_COMPILER=clang-12  \
           -DCMAKE_VERBOSE_MAKEFILE=ON
-          cmake -S . -B build-UBSan "Ninja" -DCMAKE_BUILD_TYPE=Debug -DSANITIZE_UNDEFINED=ON  \
+          cmake -S . -B build-UBSan -G "Ninja" -DCMAKE_BUILD_TYPE=Debug -DSANITIZE_UNDEFINED=ON  \
           -DCMAKE_CXX_COMPILER=clang++-12 -DCMAKE_C_COMPILER=clang-12  \
           -DCMAKE_VERBOSE_MAKEFILE=ON
 
