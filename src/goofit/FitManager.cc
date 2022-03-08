@@ -1,7 +1,7 @@
 #include "goofit/FitManager.h"
 
 #if MINUIT_VERSION == 1
-#include "FitManagerMinuit1.cc"
+#include "FitManagerMinuit1.icc"
 #elif MINUIT_VERSION == 2
 #include "FitManagerMinuit2.cc"
 #else

@@ -20,11 +20,13 @@ set(CMAKE_INSTALL_LIBDIR .)
 root_generate_dictionary(
         G__GooStatsNLLCheck ${PROJECT_SOURCE_DIR}/include/GooStatsNLLCheck.h LINKDEF
         ${PROJECT_SOURCE_DIR}/include/GooStatsNLLCheckLinkDef.h)
-add_library(GooStatsNLLCheck SHARED GooStatsNLLCheck.cc G__GooStatsNLLCheck)
-set_target_properties(GooStatsNLLCheck PROPERTIES CXX_CLANG_TIDY "")
+add_library(G__GooStatsNLLChecklib G__GooStatsNLLCheck)
+set_target_properties(G__GooStatsNLLChecklib PROPERTIES CXX_CLANG_TIDY "")
+target_link_libraries(G__GooStatsNLLChecklib PUBLIC ROOT::Core ROOT::RIO)
+add_library(GooStatsNLLCheck SHARED GooStatsNLLCheck.cc)
 
 target_include_directories(
         GooStatsNLLCheck PUBLIC "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
-target_link_libraries(GooStatsNLLCheck PUBLIC ROOT::Core ROOT::RIO)
+target_link_libraries(GooStatsNLLCheck PUBLIC G__GooStatsNLLChecklib)
 install(TARGETS GooStatsNLLCheck DESTINATION .)

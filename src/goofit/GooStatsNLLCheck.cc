@@ -1,10 +1,12 @@
 #include "GooStatsNLLCheck.h"
+
 #include "TFile.h"
 ClassImp(GooStatsNLLCheck)  // NOLINT
     GooStatsNLLCheck *GooStatsNLLCheck::get() {
   static GooStatsNLLCheck *me = nullptr;
-  if (!me)
+  if (!me) {
     me = new GooStatsNLLCheck();
+}
   return me;
 }
 void GooStatsNLLCheck::init(const std::string &fname, const std::string &name) {

@@ -1,10 +1,12 @@
 #include "goofit/PdfBase.h"
-#include "goofit/GlobalCudaDefines.h"
-#include "goofit/Variable.h"
+
 #include <algorithm>
 #include <map>
 #include <set>
 #include <utility>
+
+#include "goofit/GlobalCudaDefines.h"
+#include "goofit/Variable.h"
 
 fptype *dev_event_array[maxDataSet];
 fptype host_normalisation[maxIndicies];
@@ -58,7 +60,7 @@ __host__ int PdfBase::registerPdf() {
   return pdfIdMap.at(this);
 }
 __host__ unsigned int PdfBase::registerParameter(Variable *var) {
-  if (var == nullptr) {
+  if (var == nullptr){
     std::cout << "Error: Attempt to register null Variable with " << getName() << ", aborting.\n";
     assert(var);
     exit(1);
