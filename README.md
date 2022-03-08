@@ -1,5 +1,8 @@
 # GooFit used by GooStats
-Building status of main: ![main](https://github.com/GooStats/GooFit/actions/workflows/autoTest.yml/badge.svg?branch=main)
+
+Building status of
+main: ![main](https://github.com/GooStats/GooFit/actions/workflows/autoTest.yml/badge.svg?branch=main)
+Cpp-lint check: ![cpp-linter](https://github.com/GooStats/GooFit/actions/workflows/cpp-linter.yml/badge.svg?branch=main)
 
 GooStats for Borexino
 
@@ -14,9 +17,11 @@ cd build_GooFit
 cmake ../GooFit
 make -j
 ```
+
 that's it.
 
 ## test
+
 ```
 cd build_GooFit
 ctest
