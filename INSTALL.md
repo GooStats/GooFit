@@ -31,7 +31,7 @@ that's it.
 		./exp
 
 This is a binned likelihood fitting. The fit function is `[0]*exp([1]*x)`.
-The fit will be perfomed twice, the first is with ROOT/CPU and the second is
+The fit will be performed twice, the first is with ROOT/CPU and the second is
 with GOOFIT/GPU, and the result should be  `[0] ~ 500 , [1] ~ -0.5`
 
 If you failed, post an issue on [github/DingXuefeng/GooStats](https://github.com/DingXuefeng/GooStats)

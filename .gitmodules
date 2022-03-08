@@ -7,3 +7,6 @@
 [submodule "extern/NVIDIA/thrust"]
 	path = extern/NVIDIA/thrust
 	url = https://github.com/NVIDIA/thrust.git
+[submodule "extern/arsenm/sanitizers-cmake"]
+	path = extern/arsenm/sanitizers-cmake
+	url = https://github.com/arsenm/sanitizers-cmake

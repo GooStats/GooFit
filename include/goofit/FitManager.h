@@ -11,4 +11,4 @@
 #else
 #include "goofit/FitManagerMinuit3.h"
 #endif
-#endif 
+#endif
