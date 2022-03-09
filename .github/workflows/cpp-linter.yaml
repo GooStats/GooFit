@@ -63,9 +63,9 @@ jobs:
       - name: check ASanh
         run: |
           cmake --build build-ASan
-          export ASAN_OPTIONS="detect_stack_use_after_return=true detect_leaks=1 strict_string_checks=1 check_initialization_order=1 strict_init_order=1 halt_on_error=0"
+          export ASAN_OPTIONS="detect_stack_use_after_return=true detect_leaks=1 strict_string_checks=1 check_initialization_order=1 strict_init_order=1 detect_container_overflow=0 detect_container_overflow=0"
           pushd build-ASan
-          ctest
+          ctest --output-on-failure
           popd
 
       - name: check UBSanh
