@@ -342,7 +342,8 @@ void SumPdf::copyHistogramToDevice(const BinnedDataSet *mask, int id) {
 }
 #include "TRandom.h"
 std::unique_ptr<fptype[]> SumPdf::fill_random() {
-  setData(new BinnedDataSet(*obsBegin()));
+  BinnedDataSet data(*obsBegin());
+  setData(&data);
   copyParams();
   normalise();
   int dimensions = 2 + observables.size();  // Bin center (x,y, ...), bin value, and bin volume.
@@ -437,16 +438,16 @@ BinnedDataSet *SumPdf::getData() {
   // [1] Nevent(experiment)
   // [2] Bin volume
   Variable *obs = observables.front();
-  dataset = new BinnedDataSet(obs);
+  dataset = std::unique_ptr<BinnedDataSet>(new BinnedDataSet(obs));
   for (unsigned int i = 0; i < numEntries; ++i) {
     dataset->setBinContent(i, host_array[i * dimensions + 1]);
   }
-  return dataset;
+  return dataset.get();
 }
-void SumPdf::cache() { dataset_backup = getData(); }
+void SumPdf::cache() { getData(); dataset_backup = dataset; }
 void SumPdf::restore() {
   dataset = dataset_backup;
-  setData(dataset);
+  setData(dataset.get());
 }
 int SumPdf::NDF() {
   int NnonZeroBins = 0;

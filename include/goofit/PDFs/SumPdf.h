@@ -72,8 +72,8 @@ class SumPdf : public DataPdf {
   mutable bool m_updated;
   thrust::host_vector<fptype> cached_sumV;
   std::vector<Variable *> _weights;
-  BinnedDataSet *dataset = nullptr;
-  BinnedDataSet *dataset_backup = nullptr;
+  std::shared_ptr<BinnedDataSet> dataset;
+  std::shared_ptr<BinnedDataSet> dataset_backup;
 };
 
 #endif
