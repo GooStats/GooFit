@@ -444,7 +444,10 @@ BinnedDataSet *SumPdf::getData() {
   }
   return dataset.get();
 }
-void SumPdf::cache() { getData(); dataset_backup = dataset; }
+void SumPdf::cache() {
+  getData();
+  dataset_backup = dataset;
+}
 void SumPdf::restore() {
   dataset = dataset_backup;
   setData(dataset.get());
